@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
- * The ViewModel for our implementation.
+ * The ViewModel for our CA implementation.
  * This class delegates work to a PropertyChangeSupport object for
  * managing the property change events.
  *
