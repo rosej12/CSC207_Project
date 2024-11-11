@@ -11,7 +11,8 @@ The drawing app...
 APIs used:
 - Imagga API: https://docs.imagga.com/
 
-## Recommanded
+## Features
+- draw
 
 ## Installation
 
