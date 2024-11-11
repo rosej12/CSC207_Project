@@ -2,6 +2,8 @@ package app;
 
 import javax.swing.*;
 
+import use_cases.Drawing.DrawingDataAccessInterface;
+
 public class Main {
 
     /**
@@ -10,8 +12,11 @@ public class Main {
      */
     public static void main(String[] args) {
         final AppBuilder appBuilder = new AppBuilder();
-        final JFrame application = appBuilder.build();
-        application.pack();
-        application.setVisible(true);
+        DrawingDataAccessInterface drawingDataAccess = new DrawingDataAccessInterface();
+        appBuilder.addDAO(drawingDataAccess)
+                .addView()
+                .addUseCase()
+                .build()
+                .setVisible(true);
     }
 }
