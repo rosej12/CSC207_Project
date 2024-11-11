@@ -1,7 +1,10 @@
 package use_cases.Drawing;
 
-public interface DrawingInputBoundary {
-    public void executeSave(String drawing);
+import java.awt.image.RenderedImage;
+import java.io.File;
 
-    public void executeClear();
+public interface DrawingInputBoundary {
+     void executeSave(RenderedImage image, File file);
+
+     void executeClear();
 }

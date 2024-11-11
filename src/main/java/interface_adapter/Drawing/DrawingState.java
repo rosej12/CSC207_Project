@@ -1,9 +1,24 @@
 package interface_adapter.Drawing;
 
+import java.awt.image.RenderedImage;
+
 public class DrawingState {
-    public void setDrawing(String drawing) {
+    private RenderedImage drawing;
+    private String error;
+
+    public RenderedImage getDrawing() {
+        return drawing;
     }
 
-    public void setError(Object o) {
+    public void setDrawing(RenderedImage drawing) {
+        this.drawing = drawing;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

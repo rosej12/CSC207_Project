@@ -2,6 +2,9 @@ package interface_adapter.Drawing;
 
 import use_cases.Drawing.DrawingInputBoundary;
 
+import java.awt.image.RenderedImage;
+import java.io.File;
+
 public class DrawingController {
 
     private final DrawingInputBoundary drawingInteractor;
@@ -10,12 +13,11 @@ public class DrawingController {
         this.drawingInteractor = drawingInteractor;
     }
 
-    public void execute(String drawing) {
-        if (drawing != null) {
-            drawingInteractor.executeSave(drawing);
-        }
-        else {
-            drawingInteractor.executeClear();
-        }
+    public void executeSave(RenderedImage image, File file) {
+        drawingInteractor.executeSave(image, file);
+    }
+
+    public void executeClear() {
+        drawingInteractor.executeClear();
     }
 }

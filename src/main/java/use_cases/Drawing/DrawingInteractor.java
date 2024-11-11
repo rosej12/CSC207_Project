@@ -1,5 +1,10 @@
 package use_cases.Drawing;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class DrawingInteractor implements DrawingInputBoundary {
 
     private final DrawingOutputBoundary outputBoundary;
@@ -11,17 +16,21 @@ public class DrawingInteractor implements DrawingInputBoundary {
     }
 
     @Override
-    public void executeSave(String drawing) {
-        if (drawing != null) {
-            outputBoundary.prepareSuccessView(drawing);
-        }
-        else {
-            outputBoundary.prepareFailView("Drawing is null");
+    public void executeSave(RenderedImage image, File file) {
+        try {
+            if (image != null) {
+                ImageIO.write(image, "png", file);
+                outputBoundary.prepareSuccessView(image);
+            } else {
+                outputBoundary.prepareFailView("Drawing is empty");
+            }
+        } catch (IOException e) {
+            outputBoundary.prepareFailView("Error saving drawing" + e.getMessage());
         }
     }
 
     @Override
     public void executeClear() {
-        outputBoundary.prepareFailView("Drawing is null");
+        outputBoundary.prepareSuccessView(null);
     }
 }

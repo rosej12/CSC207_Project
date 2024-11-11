@@ -2,6 +2,8 @@ package interface_adapter.Drawing;
 
 import use_cases.Drawing.DrawingOutputBoundary;
 
+import java.awt.image.RenderedImage;
+
 public class DrawingPresenter implements DrawingOutputBoundary {
 
     private final DrawingViewModel drawingViewModel;
@@ -11,7 +13,7 @@ public class DrawingPresenter implements DrawingOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(String drawing) {
+    public void prepareSuccessView(RenderedImage drawing) {
         drawingViewModel.getState().setDrawing(drawing);
         drawingViewModel.getState().setError(null);
         drawingViewModel.firePropertyChanged();

@@ -1,9 +1,9 @@
 package view;
 
 import interface_adapter.Drawing.DrawingController;
+import interface_adapter.Drawing.DrawingState;
 import interface_adapter.Drawing.DrawingViewModel;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,9 +15,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
-import java.io.IOException;
 
-public class DrawingView extends JFrame implements PropertyChangeListener {
+public class DrawingView extends JPanel implements ActionListener, PropertyChangeListener {
 
     private final DrawingViewModel drawingViewModel;
     private final JButton saveButton = new JButton("Save");
@@ -29,11 +28,6 @@ public class DrawingView extends JFrame implements PropertyChangeListener {
         this.drawingViewModel = drawingViewModel;
         this.drawingViewModel.addPropertyChangeListener(this);
 
-        setTitle("Drawing Board");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
-        setBackground(Color.WHITE);
-
         DrawingPanel panel = new DrawingPanel();
         add(panel, BorderLayout.CENTER);
 
@@ -44,9 +38,6 @@ public class DrawingView extends JFrame implements PropertyChangeListener {
 
         saveButton.addActionListener(evt -> saveDrawing());
         clearButton.addActionListener(evt -> clearDrawing());
-
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     private void saveDrawing() {
@@ -54,17 +45,13 @@ public class DrawingView extends JFrame implements PropertyChangeListener {
         int option = fileChooser.showSaveDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            try {
-                ((DrawingPanel) getContentPane().getComponent(0)).saveImage(file);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, "Error saving image: " + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            DrawingPanel panel = (DrawingPanel) getComponent(0);
+            drawingController.executeSave((RenderedImage) panel.getImage(), file);
         }
     }
 
     private void clearDrawing() {
-        ((DrawingPanel) getContentPane().getComponent(0)).clear();
+        drawingController.executeClear();
     }
 
     private class DrawingPanel extends JPanel {
@@ -78,6 +65,7 @@ public class DrawingView extends JFrame implements PropertyChangeListener {
                 public void mousePressed(MouseEvent e) {
                     prevX = e.getX();
                     prevY = e.getY();
+                    System.out.println("Mouse pressed at " + prevX + ", " + prevY);
                 }
             });
             addMouseMotionListener(new MouseMotionAdapter() {
@@ -85,12 +73,14 @@ public class DrawingView extends JFrame implements PropertyChangeListener {
                 public void mouseDragged(MouseEvent e) {
                     int x = e.getX();
                     int y = e.getY();
+                    System.out.println("Mouse dragged to " + x + ", " + y);
 
                     if (g2 != null) {
                         g2.drawLine(prevX, prevY, x, y);
                         repaint();
                         prevX = x;
                         prevY = y;
+                        System.out.println("Line drawn");
                     }
                 }
             });
@@ -104,6 +94,7 @@ public class DrawingView extends JFrame implements PropertyChangeListener {
                 g2 = (Graphics2D) image.getGraphics();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(Color.BLACK);
+                System.out.println("Graphics2D initialized");
             }
             g.drawImage(image, 0, 0, null);
         }
@@ -117,20 +108,36 @@ public class DrawingView extends JFrame implements PropertyChangeListener {
             }
         }
 
-        public void saveImage(File file) throws IOException {
-            if (image != null) {
-                ImageIO.write((RenderedImage) image, "png", file);
-            }
+        public Image getImage() {
+            return image;
         }
+    }
+
+    public void actionPerformed(ActionEvent evt) {
+        System.out.println("Click " + evt.getActionCommand());
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("drawing".equals(evt.getPropertyName())) {
-            repaint();
-        } else if ("error".equals(evt.getPropertyName())) {
-            JOptionPane.showMessageDialog(this, evt.getNewValue(), "Error",
-                    JOptionPane.ERROR_MESSAGE);
+        final DrawingState state = (DrawingState) evt.getNewValue();
+        setFields(state);
+        if (state.getError() != null) {
+            JOptionPane.showMessageDialog(this, state.getError(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public void setFields(DrawingState state) {
+        DrawingPanel panel = (DrawingPanel) getComponent(0);
+        panel.clear();
+        if (state.getDrawing() != null) {
+            Graphics2D g2 = (Graphics2D) panel.getImage().getGraphics();
+            g2.drawImage((Image) state.getDrawing(), 0, 0, null);
+            panel.repaint();
+        }
+    }
+
+    public void setDrawingController(DrawingController controller) {
+        this.drawingController = controller;
     }
 }
