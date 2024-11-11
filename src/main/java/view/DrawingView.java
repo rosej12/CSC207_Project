@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -110,6 +111,19 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
         public Image getImage() {
             return image;
+        }
+
+        public boolean isDrawingEmpty() {
+            if (image instanceof BufferedImage bufferedImage) {
+                for (int x = 0; x < bufferedImage.getWidth(); x++) {
+                    for (int y = 0; y < bufferedImage.getHeight(); y++) {
+                        if (bufferedImage.getRGB(x, y) != Color.WHITE.getRGB()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
         }
     }
 

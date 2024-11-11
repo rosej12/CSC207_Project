@@ -52,7 +52,7 @@ public class AppBuilder {
         final JFrame frame = new JFrame();
         frame.setTitle("Drawing Board");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(1000, 800);
         frame.setBackground(Color.WHITE);
         frame.setLocationRelativeTo(null);
         frame.add(drawingView);
