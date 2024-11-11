@@ -29,15 +29,17 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         this.drawingViewModel.addPropertyChangeListener(this);
 
         DrawingPanel panel = new DrawingPanel();
-        add(panel, BorderLayout.CENTER);
 
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(saveButton);
         buttonsPanel.add(clearButton);
-        add(buttonsPanel, BorderLayout.SOUTH);
 
         saveButton.addActionListener(evt -> saveDrawing());
         clearButton.addActionListener(evt -> clearDrawing());
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.add(panel, BorderLayout.CENTER);
+        this.add(buttonsPanel, BorderLayout.SOUTH);
     }
 
     private void saveDrawing() {
@@ -65,7 +67,6 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                 public void mousePressed(MouseEvent e) {
                     prevX = e.getX();
                     prevY = e.getY();
-                    System.out.println("Mouse pressed at " + prevX + ", " + prevY);
                 }
             });
             addMouseMotionListener(new MouseMotionAdapter() {
@@ -73,7 +74,6 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                 public void mouseDragged(MouseEvent e) {
                     int x = e.getX();
                     int y = e.getY();
-                    System.out.println("Mouse dragged to " + x + ", " + y);
 
                     if (g2 != null) {
                         g2.drawLine(prevX, prevY, x, y);
@@ -94,7 +94,6 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                 g2 = (Graphics2D) image.getGraphics();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(Color.BLACK);
-                System.out.println("Graphics2D initialized");
             }
             g.drawImage(image, 0, 0, null);
         }
