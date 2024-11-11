@@ -114,7 +114,8 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         }
 
         public boolean isDrawingEmpty() {
-            if (image instanceof BufferedImage bufferedImage) {
+            if (image instanceof BufferedImage ) {
+                BufferedImage bufferedImage = (BufferedImage) image;
                 for (int x = 0; x < bufferedImage.getWidth(); x++) {
                     for (int y = 0; y < bufferedImage.getHeight(); y++) {
                         if (bufferedImage.getRGB(x, y) != Color.WHITE.getRGB()) {
