@@ -28,16 +28,18 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         this.drawingViewModel = drawingViewModel;
         this.drawingViewModel.addPropertyChangeListener(this);
 
+        setLayout(new BorderLayout());
+
         DrawingPanel panel = new DrawingPanel();
 
         JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonsPanel.add(saveButton);
         buttonsPanel.add(clearButton);
 
         saveButton.addActionListener(evt -> saveDrawing());
         clearButton.addActionListener(evt -> clearDrawing());
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(panel, BorderLayout.CENTER);
         this.add(buttonsPanel, BorderLayout.SOUTH);
     }
@@ -80,7 +82,6 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                         repaint();
                         prevX = x;
                         prevY = y;
-                        System.out.println("Line drawn");
                     }
                 }
             });
