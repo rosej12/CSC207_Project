@@ -14,11 +14,11 @@ APIs used:
 - Clipdrop API: https://clipdrop.co/apis/docs/sketch-to-image
 
 ## Features
-- Draw, Save as image, draw shapes, draw with different colors/size, fill
-- Generate color palette from image (api)
-- Generate random color palette (api)
-- Sketch to image (api)
-- Generate text tags for image (api) --> what does this do for the user
+1. Draw and save as image, and draw shapes and with different brush size, fill
+3. undo/redo and autosave
+4. Generate color palette from image (api)
+5. Generate random color palette (api)
+6. Sketch to image (api)
 
 ## Installation
 
