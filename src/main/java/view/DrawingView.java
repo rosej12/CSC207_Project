@@ -25,6 +25,10 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
     private int prevX, prevY;
     private DrawingController drawingController;
 
+    // TODO: may need to move
+    private Color backgroundColor = Color.WHITE;
+    private Color drawingColor = Color.BLACK;
+
     public DrawingView(DrawingViewModel drawingViewModel) {
         this.drawingViewModel = drawingViewModel;
         this.drawingViewModel.addPropertyChangeListener(this);
@@ -95,16 +99,16 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                 image = createImage(getSize().width, getSize().height);
                 g2 = (Graphics2D) image.getGraphics();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(Color.BLACK);
+                g2.setColor(drawingColor);
             }
             g.drawImage(image, 0, 0, null);
         }
 
         public void clear() {
             if (g2 != null) {
-                g2.setPaint(Color.WHITE);
+                g2.setPaint(backgroundColor);
                 g2.fillRect(0, 0, getWidth(), getHeight());
-                g2.setPaint(Color.BLACK);
+                g2.setPaint(drawingColor);
                 repaint();
             }
         }
@@ -118,7 +122,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                 BufferedImage bufferedImage = (BufferedImage) image;
                 for (int x = 0; x < bufferedImage.getWidth(); x++) {
                     for (int y = 0; y < bufferedImage.getHeight(); y++) {
-                        if (bufferedImage.getRGB(x, y) != Color.WHITE.getRGB()) {
+                        if (bufferedImage.getRGB(x, y) != backgroundColor.getRGB()) {
                             return false;
                         }
                     }
