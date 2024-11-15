@@ -12,21 +12,21 @@ APIs used:
 
 ## Features
 ***
-1. Basic Drawing Functionality:
-- [x] Draw 
-- [x] Save as image
-- [ ] Erase 
-- [ ] Draw shapes
-- [ ] Draw with different brush size
-- [ ] Fill (fills in the space around the mouse that is enclosed by brush strokes)
+- [ ] Basic Drawing Functionality:
+  - [x] Draw 
+  - [x] Save as image
+  - [ ] Erase 
+  - [ ] Draw shapes
+  - [ ] Draw with different brush size
+  - [ ] Fill (fills in the space around the mouse that is enclosed by brush strokes)
 ***
-2. Let the user undo/redo brush strokes and autosave
+- [ ] Let the user undo/redo brush strokes and autosave
 ***
-3. Generate random color palette and let user be able to "lock" certain colors and manually change some colours.
+- [ ] Generate random color palette and let user be able to "lock" certain colors and manually change some colours.
 ***
-4. Generate color palette from an uploaded image (api)
+- [ ] Generate color palette from an uploaded image (api)
 ***
-5. Let User describe their sketch as a string and convert the sketch to a more realistic drawing (api)
+- [ ] Let User describe their sketch as a string and convert the sketch to a more realistic drawing (api)
 ***
 
 ## Installation and Configuration
