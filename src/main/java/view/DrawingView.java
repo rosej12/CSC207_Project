@@ -22,6 +22,10 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
     private final DrawingViewModel drawingViewModel;
     private final JButton saveButton = new JButton("Save");
     private final JButton clearButton = new JButton("Clear All");
+    private final ButtonGroup toolButtonGroup = new ButtonGroup();
+    private final JRadioButton paintButton = new JRadioButton("Paint");
+    private final JRadioButton eraseButton = new JRadioButton("Erase");
+
     private int prevX, prevY;
     private DrawingController drawingController;
 
@@ -45,8 +49,27 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         saveButton.addActionListener(evt -> saveDrawing());
         clearButton.addActionListener(evt -> clearDrawing());
 
+        JPanel toolsPanel = new JPanel();
+        toolButtonGroup.add(paintButton);
+        toolButtonGroup.add(eraseButton);
+        paintButton.setSelected(true);
+        toolsPanel.add(paintButton);
+        toolsPanel.add(eraseButton);
+        eraseButton.addActionListener(evt -> eraseTool());
+        paintButton.addActionListener(evt -> paintTool());
+
         this.add(panel, BorderLayout.CENTER);
         this.add(buttonsPanel, BorderLayout.SOUTH);
+        this.add(toolsPanel, BorderLayout.NORTH);
+    }
+
+    private void eraseTool() {
+        drawingColor = backgroundColor;
+    }
+
+    // TODO: make this work for a selected color by user
+    private void paintTool() {
+        drawingColor = Color.BLACK;
     }
 
     private void saveDrawing() {
@@ -84,6 +107,9 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
                     if (g2 != null) {
                         g2.drawLine(prevX, prevY, x, y);
+
+                        //TODO: temp
+                        g2.setColor(drawingColor);
                         repaint();
                         prevX = x;
                         prevY = y;
@@ -100,6 +126,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                 g2 = (Graphics2D) image.getGraphics();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(drawingColor);
+                System.out.println(drawingColor);
             }
             g.drawImage(image, 0, 0, null);
         }
