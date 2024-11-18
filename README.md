@@ -18,7 +18,8 @@ APIs used:
 - Generate color palette from image (api)
 - Generate random color palette (api)
 - Sketch to image (api)
-- Generate text tags for image (api) --> what does this do for the user
+- User writes their tags/caption for their art
+- Not doing: Generate text tags for image (api) --> what does this do for the user
 
 ## Installation
 
