@@ -2,26 +2,32 @@
 
 ## Description
 
-The drawing app...
-
-## Table of Content
+A drawing app that allows the user to draw a quick sketch using a randomly generated color palette. The user can also choose to generate a custom color palette by uploading an image. The sketch can then be converted to realistic painting.
 
 ## Requirements
 
 APIs used:
 - Imagga API: https://docs.imagga.com/
-- Colormind API: http://colormind.io/api-access/
 - Clipdrop API: https://clipdrop.co/apis/docs/sketch-to-image
 
 ## Features
-- Draw, Save as image, draw shapes, draw with different colors/size, fill
-- Generate color palette from image (api)
-- Generate random color palette (api)
-- Sketch to image (api)
-- User writes their tags/caption for their art
-- Not doing: Generate text tags for image (api) --> what does this do for the user
+***
+- [ ] Basic Drawing Functionality:
+  - [x] Draw 
+  - [x] Save as image
+  - [ ] Erase 
+  - [ ] Draw shapes
+  - [ ] Draw with different brush size
+  - [ ] Fill (fills in the space around the mouse that is enclosed by brush strokes)
+***
+- [ ] Let the user undo/redo brush strokes and autosave
+***
+- [ ] Generate random color palette and let user be able to "lock" certain colors and manually change some colours.
+***
+- [ ] Generate color palette from an uploaded image (api)
+***
+- [ ] Let User describe their sketch as a string and convert the sketch to a more realistic drawing (api)
+***
 
-## Installation
-
-## Configuration
+## Installation and Configuration
 - Maven Project (right click on pom.xml > "add as Maven Project")
