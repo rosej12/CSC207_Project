@@ -32,6 +32,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
     // TODO: may need to move
     private Color backgroundColor = Color.WHITE;
     private Color drawingColor = Color.BLACK;
+    private Color currentColor = drawingColor;
 
     public DrawingView(DrawingViewModel drawingViewModel) {
         this.drawingViewModel = drawingViewModel;
@@ -64,12 +65,11 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
     }
 
     private void eraseTool() {
-        drawingColor = backgroundColor;
+        currentColor = backgroundColor;
     }
 
-    // TODO: make this work for a selected color by user
     private void paintTool() {
-        drawingColor = Color.BLACK;
+        currentColor = drawingColor;
     }
 
     private void saveDrawing() {
@@ -109,7 +109,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                         g2.drawLine(prevX, prevY, x, y);
 
                         //TODO: temp
-                        g2.setColor(drawingColor);
+                        g2.setColor(currentColor);
                         repaint();
                         prevX = x;
                         prevY = y;
@@ -125,8 +125,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                 image = createImage(getSize().width, getSize().height);
                 g2 = (Graphics2D) image.getGraphics();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(drawingColor);
-                System.out.println(drawingColor);
+                g2.setColor(currentColor);
             }
             g.drawImage(image, 0, 0, null);
         }
@@ -135,7 +134,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
             if (g2 != null) {
                 g2.setPaint(backgroundColor);
                 g2.fillRect(0, 0, getWidth(), getHeight());
-                g2.setPaint(drawingColor);
+                g2.setPaint(currentColor);
                 repaint();
             }
         }
