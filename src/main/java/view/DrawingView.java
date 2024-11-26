@@ -29,12 +29,11 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
     private final JRadioButton paintButton = new JRadioButton("Paint");
     private final JRadioButton eraseButton = new JRadioButton("Erase");
 
-//    String[] sizeNumbers = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    int intial = 1;
-    SpinnerNumberModel paintModel = new SpinnerNumberModel(intial, intial, intial + 29, 1 );
+    int initialSize = 1;
+    SpinnerNumberModel paintModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1 );
     private final JSpinner paintSizeSpinner =  new JSpinner(paintModel);
 
-    SpinnerNumberModel eraseModel = new SpinnerNumberModel(intial, intial, intial + 29, 1 );
+    SpinnerNumberModel eraseModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1 );
     private final JSpinner eraseSizeSpinner =  new JSpinner(eraseModel);
 
     private int prevX, prevY;
@@ -77,6 +76,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         toolButtonGroup.add(eraseButton);
         paintButton.setSelected(true);
 
+        // Paint Size Spinner
         JLabel pSize = new JLabel("Paint Size");
         toolsPanel.add(pSize);
         toolsPanel.add(paintSizeSpinner);
@@ -89,6 +89,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
         toolsPanel.add(paintButton);
 
+        // Eraser Size Spinner
         toolsPanel.add(eraseButton);
 
         JLabel eSize = new JLabel("Erase Size");
@@ -216,8 +217,6 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                             g2.drawLine(prevX - i, prevY - i, x - i, y - i);
                         }
 
-                        //for (int i = 0; i < 10; i++) {
-                        //    g2.drawLine(prevX - (i), prevY + i, x + i, y + i);
                         repaint();
                         prevX = x;
                         prevY = y;
@@ -292,5 +291,9 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
     public void setDrawingController(DrawingController controller) {
         this.drawingController = controller;
+    }
+
+    public DrawingController getDrawingController(){
+        return drawingController;
     }
 }
