@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapter.Drawing.DrawingController;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteController;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
 
@@ -12,12 +13,12 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 
 public class ImageToColorPaletteView extends JPanel implements ActionListener, PropertyChangeListener {
-    private final ImageToColorPaletteController controller;
+    private final String viewName = "ImageToColorPalette";
     private final ImageToColorPaletteViewModel viewModel;
     private final JButton uploadButton = new JButton("Upload Image");
+    private ImageToColorPaletteController imageToColorPaletteController;
 
-    public ImageToColorPaletteView(ImageToColorPaletteController controller, ImageToColorPaletteViewModel viewModel) {
-        this.controller = controller;
+    public ImageToColorPaletteView(ImageToColorPaletteViewModel viewModel) {
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
 
@@ -28,7 +29,7 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
             int option = fileChooser.showOpenDialog(ImageToColorPaletteView.this);
             if (option == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                controller.generateColorPalette(file);
+                imageToColorPaletteController.generateColorPalette(file);
             }
         });
 
@@ -38,8 +39,14 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("colors".equals(evt.getPropertyName())) {
-            displayColors((String[]) evt.getNewValue());
+            displayColors(viewModel.getState().getColors());
+        } else if ("error".equals(evt.getPropertyName())) {
+            displayError(viewModel.getState().getErrorMessage());
         }
+    }
+
+    private void displayError(String errorMessage) {
+        JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private void displayColors(String[] colors) {
@@ -60,5 +67,11 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
     @Override
     public void actionPerformed(ActionEvent e) {
 
+    }
+
+    public String getViewName() {return viewName;}
+
+    public void setImageToColorPaletteController(ImageToColorPaletteController controller) {
+        this.imageToColorPaletteController = controller;
     }
 }

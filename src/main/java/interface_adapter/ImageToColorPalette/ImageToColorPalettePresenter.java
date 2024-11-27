@@ -12,5 +12,12 @@ public class ImageToColorPalettePresenter implements ImageToColorPaletteOutputBo
     @Override
     public void presentColorPalette(String[] colors) {
         viewModel.getState().setColors(colors);
+        viewModel.firePropertyChanged("colors");
+    }
+
+    @Override
+    public void presentError(String errorMessage) {
+        viewModel.getState().setErrorMessage(errorMessage);
+        viewModel.firePropertyChanged("error");
     }
 }

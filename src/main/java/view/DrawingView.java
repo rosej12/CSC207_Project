@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.Random;
 
 public class DrawingView extends JPanel implements ActionListener, PropertyChangeListener {
-
+    private final String viewName = "Drawing";
     private final DrawingViewModel drawingViewModel;
     private final JButton saveButton = new JButton("Save");
     private final JButton clearButton = new JButton("Clear All");
@@ -32,6 +32,8 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
     private Color[] colorPalette;
     private boolean[] colorLocks;
     private JButton[] colorButtons;
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
 
     // TODO: may need to move
     private Color backgroundColor = Color.WHITE;
@@ -70,7 +72,10 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
         JButton randomColorButton = new JButton("Generate Colors");
         randomColorButton.addActionListener(e -> generateRandomColorPalette());
+        JButton ImageToColorButton = new JButton("Image to Color Palette");
+        ImageToColorButton.addActionListener(e -> cardLayout.show(mainPanel, "ImageToColorPaletteView"));
         buttonsPanel.add(randomColorButton);
+        buttonsPanel.add(ImageToColorButton);
 
         for (int i = 0; i < colorPalette.length; i++) {
             JButton colorButton = new JButton();
@@ -151,6 +156,8 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         drawingController.executeClear();
     }
 
+    public String getViewName() {return viewName;}
+
     private class DrawingPanel extends JPanel {
         private Image image;
         private Graphics2D g2;
@@ -227,11 +234,14 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final DrawingState state = (DrawingState) evt.getNewValue();
-        setFields(state);
-        if (state.getError() != null) {
-            JOptionPane.showMessageDialog(this, state.getError(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+        final DrawingState state = drawingViewModel.getState();
+
+        if ("message".equals(evt.getPropertyName())) {
+            JOptionPane.showMessageDialog(this, state.getMessage(), "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else if ("error".equals(evt.getPropertyName())) {
+            JOptionPane.showMessageDialog(this, state.getError(), "Error", JOptionPane.ERROR_MESSAGE);
+        } else if ("clear".equals(evt.getPropertyName())) {
+            drawingPanel.clear();
         }
     }
 
