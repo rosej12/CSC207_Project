@@ -1,5 +1,6 @@
 package app;
 
+import frameworks_and_drivers.ImageToColorPaletteAPI;
 import interface_adapter.Drawing.*;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
 import interface_adapter.ViewManagerModel;
@@ -36,14 +37,14 @@ public class AppBuilder {
 
     public AppBuilder addDrawingView() {
         drawingViewModel = new DrawingViewModel();
-        drawingView = new DrawingView(drawingViewModel);
+        drawingView = new DrawingView(drawingViewModel, viewManagerModel);
         cardPanel.add(drawingView, drawingView.getViewName());
         return this;
     }
 
     public AppBuilder addImageToColorPaletteView() {
         imageToColorPaletteViewModel = new ImageToColorPaletteViewModel();
-        imageToColorPaletteView = new ImageToColorPaletteView(imageToColorPaletteViewModel);
+        imageToColorPaletteView = new ImageToColorPaletteView(imageToColorPaletteViewModel, viewManagerModel);
         cardPanel.add(imageToColorPaletteView, imageToColorPaletteView.getViewName());
         return this;
     }
@@ -57,13 +58,17 @@ public class AppBuilder {
     }
 
     public AppBuilder addImageToColorPaletteUseCase() {
-        final ImageToColorPaletteOutputBoundary imageToColorPaletteOutputBoundary = new ImageToColorPalettePresenter(imageToColorPaletteViewModel);
+        final ImageToColorPaletteOutputBoundary imageToColorPaletteOutputBoundary =
+                new ImageToColorPalettePresenter(imageToColorPaletteViewModel);
 
         // Initialize the data access implementation
-        final ImageToColorPaletteDataAccessInterface dataAccess = new ImageToColorPaletteAPI("your_api_key", "your_api_secret");
+        final ImageToColorPaletteDataAccessInterface dataAccess =
+                new ImageToColorPaletteAPI("acc_054cca57db5a48e", "6721441a35c051ac95446e1cc94cc6a4");
 
-        final ImageToColorPaletteInputBoundary imageToColorPaletteInteractor = new ImageToColorPaletteInteractor(dataAccess, imageToColorPaletteOutputBoundary);
-        final ImageToColorPaletteController imageToColorPaletteController = new ImageToColorPaletteController(imageToColorPaletteInteractor);
+        final ImageToColorPaletteInputBoundary imageToColorPaletteInteractor =
+                new ImageToColorPaletteInteractor(dataAccess, imageToColorPaletteOutputBoundary);
+        final ImageToColorPaletteController imageToColorPaletteController =
+                new ImageToColorPaletteController(imageToColorPaletteInteractor);
         imageToColorPaletteView.setImageToColorPaletteController(imageToColorPaletteController);
         return this;
     }

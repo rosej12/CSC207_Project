@@ -1,11 +1,7 @@
 package app;
 
-import javax.swing.*;
-
-import frameworks_and_drivers.DrawingFileDataAccess;
+import data_access.DrawingFileDataAccess;
 import use_cases.Drawing.DrawingDataAccessInterface;
-
-import java.awt.*;
 
 public class Main {
 

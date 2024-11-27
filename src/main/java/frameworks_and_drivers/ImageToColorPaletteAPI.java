@@ -1,4 +1,4 @@
-package use_cases.ImageToColorPalette;
+package frameworks_and_drivers;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import okhttp3.*;
+import use_cases.ImageToColorPalette.ImageToColorPaletteDataAccessInterface;
 
 public class ImageToColorPaletteAPI implements ImageToColorPaletteDataAccessInterface {
 

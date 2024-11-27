@@ -3,8 +3,10 @@ package view;
 import interface_adapter.Drawing.DrawingController;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteController;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
+import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,14 +17,22 @@ import java.io.File;
 public class ImageToColorPaletteView extends JPanel implements ActionListener, PropertyChangeListener {
     private final String viewName = "ImageToColorPalette";
     private final ImageToColorPaletteViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
+    private final JButton backButton = new JButton("Back");
     private final JButton uploadButton = new JButton("Upload Image");
     private ImageToColorPaletteController imageToColorPaletteController;
 
-    public ImageToColorPaletteView(ImageToColorPaletteViewModel viewModel) {
+    public ImageToColorPaletteView(ImageToColorPaletteViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
         this.viewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
+
+        // Panel for buttons
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.add(uploadButton);
+        buttonsPanel.add(backButton);
 
         uploadButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -33,7 +43,14 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
             }
         });
 
-        add(uploadButton, BorderLayout.NORTH);
+        backButton.addActionListener(e -> switchToDrawingView());
+
+        add(buttonsPanel, BorderLayout.NORTH);
+    }
+
+    private void switchToDrawingView() {
+        viewManagerModel.setState("Drawing");
+        viewManagerModel.firePropertyChanged();
     }
 
     @Override
