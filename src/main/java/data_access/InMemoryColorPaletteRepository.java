@@ -15,12 +15,10 @@ public class InMemoryColorPaletteRepository implements ColorPaletteRepositoryInt
         ColorPalette oldPalette = this.colorPalette;
         this.colorPalette = colorPalette;
         support.firePropertyChange("colorPalette", oldPalette, this.colorPalette);
-        System.out.println("Saving color palette with " + colorPalette.size() + " colors");
     }
 
     @Override
     public ColorPalette getColorPalette() {
-        System.out.println("Retrieving color palette");
         return colorPalette;
     }
 
