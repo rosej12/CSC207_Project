@@ -72,6 +72,8 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         // Initialize color palette buttons
         updateColorPalette();
 
+        colorPaletteRepository.addPropertyChangeListener(this);
+
         // Top panel with tools
         JPanel toolsPanel = new JPanel();
         toolButtonGroup.add(paintButton);
