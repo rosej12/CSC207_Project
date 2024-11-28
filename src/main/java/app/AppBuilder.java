@@ -1,5 +1,6 @@
 package app;
 
+import data_access.InMemoryColorPaletteRepository;
 import frameworks_and_drivers.ImageToColorPaletteAPI;
 import interface_adapter.Drawing.*;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
@@ -25,9 +26,11 @@ public class AppBuilder {
     private DrawingDataAccessInterface drawingDAO;
     private ImageToColorPaletteView imageToColorPaletteView;
     private ImageToColorPaletteViewModel imageToColorPaletteViewModel;
+    private ColorPaletteRepositoryInterface colorPaletteRepository;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+        colorPaletteRepository = new InMemoryColorPaletteRepository();
     }
 
     public AppBuilder addDAO(DrawingDataAccessInterface drawingDataAccess) {
@@ -37,7 +40,7 @@ public class AppBuilder {
 
     public AppBuilder addDrawingView() {
         drawingViewModel = new DrawingViewModel();
-        drawingView = new DrawingView(drawingViewModel, viewManagerModel);
+        drawingView = new DrawingView(drawingViewModel, viewManagerModel, colorPaletteRepository);
         cardPanel.add(drawingView, drawingView.getViewName());
         return this;
     }
@@ -66,7 +69,7 @@ public class AppBuilder {
                 new ImageToColorPaletteAPI("acc_054cca57db5a48e", "6721441a35c051ac95446e1cc94cc6a4");
 
         final ImageToColorPaletteInputBoundary imageToColorPaletteInteractor =
-                new ImageToColorPaletteInteractor(dataAccess, imageToColorPaletteOutputBoundary);
+                new ImageToColorPaletteInteractor(dataAccess, imageToColorPaletteOutputBoundary, colorPaletteRepository);
         final ImageToColorPaletteController imageToColorPaletteController =
                 new ImageToColorPaletteController(imageToColorPaletteInteractor);
         imageToColorPaletteView.setImageToColorPaletteController(imageToColorPaletteController);

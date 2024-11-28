@@ -1,9 +1,11 @@
 package view;
 
+import entities.ColorPalette;
 import interface_adapter.Drawing.DrawingController;
 import interface_adapter.Drawing.DrawingState;
 import interface_adapter.Drawing.DrawingViewModel;
 import interface_adapter.ViewManagerModel;
+import use_cases.ImageToColorPalette.ColorPaletteRepositoryInterface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +26,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private final DrawingViewModel drawingViewModel;
     private DrawingController drawingController;
     private final ViewManagerModel viewManagerModel;
+    private final ColorPaletteRepositoryInterface colorPaletteRepository;
 
     private final JButton saveButton = new JButton("Save");
     private final JButton clearButton = new JButton("Clear All");
@@ -36,15 +39,38 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
     private Color currentColor = Color.BLACK;
     private DrawingPanel drawingPanel;
+    private JButton[] colorButtons;
+    private JPanel buttonsPanel;
 
-    public DrawingView(DrawingViewModel drawingViewModel, ViewManagerModel viewManagerModel) {
+    public DrawingView(DrawingViewModel drawingViewModel, ViewManagerModel viewManagerModel,
+                       ColorPaletteRepositoryInterface colorPaletteRepository) {
         this.drawingViewModel = drawingViewModel;
         this.viewManagerModel = viewManagerModel;
         this.drawingViewModel.addPropertyChangeListener(this);
+        this.colorPaletteRepository = colorPaletteRepository;
 
         setLayout(new BorderLayout());
 
         drawingPanel = new DrawingPanel();
+
+        // Initialize buttonsPanel before using it in updateColorPalette
+        buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        // Add other buttons to buttonsPanel
+        buttonsPanel.add(saveButton);
+        buttonsPanel.add(clearButton);
+        buttonsPanel.add(generateColorButton);
+        buttonsPanel.add(imageToColorButton);
+
+        // Set up action listeners for buttons
+        saveButton.addActionListener(e -> saveDrawing());
+        clearButton.addActionListener(e -> clearDrawing());
+        generateColorButton.addActionListener(e -> generateRandomColors());
+        imageToColorButton.addActionListener(e -> switchToImageToColorPaletteView());
+
+        // Initialize color palette buttons
+        updateColorPalette();
 
         // Top panel with tools
         JPanel toolsPanel = new JPanel();
@@ -56,19 +82,6 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
         paintButton.addActionListener(e -> currentColor = Color.BLACK);
         eraseButton.addActionListener(e -> currentColor = Color.WHITE);
-
-        // Bottom panel with buttons
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        buttonsPanel.add(saveButton);
-        buttonsPanel.add(clearButton);
-        buttonsPanel.add(generateColorButton);
-        buttonsPanel.add(imageToColorButton);
-
-        saveButton.addActionListener(e -> saveDrawing());
-        clearButton.addActionListener(e -> clearDrawing());
-        generateColorButton.addActionListener(e -> generateRandomColors());
-        imageToColorButton.addActionListener(e -> switchToImageToColorPaletteView());
 
         this.add(drawingPanel, BorderLayout.CENTER);
         this.add(buttonsPanel, BorderLayout.SOUTH);
@@ -100,9 +113,52 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         drawingController.executeClear();
     }
 
+    private void updateColorPalette() {
+        // Retrieve the color palette from the repository
+        ColorPalette colorPalette = colorPaletteRepository.getColorPalette();
+
+        if (colorPalette != null) {
+            // Update UI components (color buttons)
+            // Remove existing color buttons if any
+            if (colorButtons != null) {
+                for (JButton colorButton : colorButtons) {
+                    buttonsPanel.remove(colorButton);
+                }
+            }
+
+            // Create new color buttons
+            int paletteSize = colorPalette.size();
+            colorButtons = new JButton[paletteSize];
+            for (int i = 0; i < paletteSize; i++) {
+                JButton colorButton = new JButton();
+                entities.Color colorEntity = colorPalette.getColor(i);
+                java.awt.Color awtColor = new java.awt.Color(colorEntity.getRed(), colorEntity.getGreen(), colorEntity.getBlue());
+                colorButton.setBackground(awtColor);
+                int index = i;
+                colorButton.addActionListener(e -> selectColor(index));
+                buttonsPanel.add(colorButton);
+                colorButtons[i] = colorButton;
+            }
+
+            // Refresh the panel
+            buttonsPanel.revalidate();
+            buttonsPanel.repaint();
+        }
+    }
+
+    private void selectColor(int index) {
+        entities.Color color = colorPaletteRepository.getColorPalette().getColor(index);
+        currentColor = new java.awt.Color(
+                color.getRed(), color.getGreen(), color.getBlue());
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final DrawingState state = drawingViewModel.getState();
+
+        if ("colorPalette".equals(evt.getPropertyName())) {
+            updateColorPalette();
+        }
 
         if (state.getError() != null) {
             JOptionPane.showMessageDialog(this, state.getError(), "Error", JOptionPane.ERROR_MESSAGE);

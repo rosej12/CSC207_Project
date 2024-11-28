@@ -1,5 +1,7 @@
 package view;
 
+import entities.ColorPalette;
+import entities.Color;
 import interface_adapter.Drawing.DrawingController;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteController;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
@@ -25,6 +27,7 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
     public ImageToColorPaletteView(ImageToColorPaletteViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
+        this.viewModel.addPropertyChangeListener(this);
         this.viewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
@@ -55,8 +58,8 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("colors".equals(evt.getPropertyName())) {
-            displayColors(viewModel.getState().getColors());
+        if ("colorPalette".equals(evt.getPropertyName())) {
+            displayColors(viewModel.getState().getColorPalette());
         } else if ("error".equals(evt.getPropertyName())) {
             displayError(viewModel.getState().getErrorMessage());
         }
@@ -66,13 +69,13 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
         JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private void displayColors(String[] colors) {
+    private void displayColors(ColorPalette colorPalette) {
         JPanel colorPanel = new JPanel();
         colorPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        for (String color : colors) {
-            JLabel label = new JLabel(color);
+        for (Color color : colorPalette.getColors()) {
+            JLabel label = new JLabel();
             label.setOpaque(true);
-            label.setBackground(Color.decode(color));
+            label.setBackground(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
             label.setPreferredSize(new Dimension(100, 100));
             colorPanel.add(label);
         }

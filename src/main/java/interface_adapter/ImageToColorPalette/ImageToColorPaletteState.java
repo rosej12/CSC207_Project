@@ -1,16 +1,15 @@
 package interface_adapter.ImageToColorPalette;
 
+import entities.ColorPalette;
+
 public class ImageToColorPaletteState {
-    private String[] colors;
+    private ColorPalette colorPalette;
     private String errorMessage;
 
-    public String[] getColors() {
-        return colors;
+    public ColorPalette getColorPalette() {
+        return colorPalette;
     }
 
-    public void setColors(String[] colors) {
-        this.colors = colors;
-    }
 
     public String getErrorMessage() {
         return errorMessage;
@@ -19,4 +18,6 @@ public class ImageToColorPaletteState {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+    public void setColorPalette(ColorPalette colorPalette) {this.colorPalette = colorPalette;}
 }

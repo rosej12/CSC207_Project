@@ -1,6 +1,7 @@
 package interface_adapter.ImageToColorPalette;
 
 import use_cases.ImageToColorPalette.ImageToColorPaletteOutputBoundary;
+import use_cases.ImageToColorPalette.ImageToColorPaletteResponseModel;
 
 public class ImageToColorPalettePresenter implements ImageToColorPaletteOutputBoundary {
     private final ImageToColorPaletteViewModel viewModel;
@@ -10,9 +11,9 @@ public class ImageToColorPalettePresenter implements ImageToColorPaletteOutputBo
     }
 
     @Override
-    public void presentColorPalette(String[] colors) {
-        viewModel.getState().setColors(colors);
-        viewModel.firePropertyChanged("colors");
+    public void presentColorPalette(ImageToColorPaletteResponseModel responseModel) {
+        viewModel.getState().setColorPalette(responseModel.getColorPalette());
+        viewModel.firePropertyChanged("colorPalette");
     }
 
     @Override
