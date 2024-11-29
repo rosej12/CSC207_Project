@@ -14,8 +14,10 @@ public class Main {
         final AppBuilder appBuilder = new AppBuilder();
         DrawingDataAccessInterface drawingDataAccess = new DrawingDataAccessInterface();
         appBuilder.addDAO(drawingDataAccess)
-                .addView()
-                .addUseCase()
+                .addDrawingView()
+                .addGenerateRandomColorPaletteView()
+                .addDrawingUseCase()
+                .addGenerateRandomColorPaletteUseCase()
                 .build()
                 .setVisible(true);
     }
