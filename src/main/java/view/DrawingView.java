@@ -5,13 +5,10 @@ import interface_adapter.Drawing.DrawingController;
 import interface_adapter.Drawing.DrawingState;
 import interface_adapter.Drawing.DrawingViewModel;
 import interface_adapter.ViewManagerModel;
-import use_cases.Drawing.ColorPalette.ColorPaletteRepositoryInterface;
+import use_cases.GenerateRandomColorPalette.ColorPaletteRepositoryInterface;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -19,7 +16,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
-import java.util.Random;
 
 public class DrawingView extends JPanel implements PropertyChangeListener {
     private final String viewName = "Drawing";

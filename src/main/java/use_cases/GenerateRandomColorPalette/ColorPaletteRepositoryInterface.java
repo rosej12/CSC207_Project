@@ -1,4 +1,4 @@
-package use_cases.Drawing.ColorPalette;
+package use_cases.GenerateRandomColorPalette;
 
 import entities.ColorPalette;
 

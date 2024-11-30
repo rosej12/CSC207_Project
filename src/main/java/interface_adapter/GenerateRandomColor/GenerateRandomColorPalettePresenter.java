@@ -1,7 +1,7 @@
 package interface_adapter.GenerateRandomColor;
 
-import use_cases.Drawing.ColorPalette.GenerateRandomColorPalette.GenerateRandomColorPaletteOutputBoundary;
-import use_cases.Drawing.ColorPalette.GenerateRandomColorPalette.GenerateRandomColorPaletteResponseModel;
+import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteOutputBoundary;
+import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteResponseModel;
 
 public class GenerateRandomColorPalettePresenter implements GenerateRandomColorPaletteOutputBoundary {
     private final GenerateRandomColorPaletteViewModel viewModel;

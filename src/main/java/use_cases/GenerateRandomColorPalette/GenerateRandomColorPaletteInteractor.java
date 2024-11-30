@@ -1,14 +1,13 @@
-package use_cases.Drawing.ColorPalette.GenerateRandomColorPalette;
+package use_cases.GenerateRandomColorPalette;
 
 import entities.Color;
 import entities.ColorPalette;
-import use_cases.Drawing.ColorPalette.ColorPaletteRepositoryInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class GenerateRandomColorPaletteInteractor implements GenerateRandomColorPaletteInputBoundary{
+public class GenerateRandomColorPaletteInteractor implements GenerateRandomColorPaletteInputBoundary {
     private final GenerateRandomColorPaletteOutputBoundary outputBoundary;
     private final ColorPaletteRepositoryInterface colorPaletteRepository;
 

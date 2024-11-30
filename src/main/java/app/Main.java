@@ -1,7 +1,5 @@
 package app;
 
-import javax.swing.*;
-
 import use_cases.Drawing.DrawingDataAccessInterface;
 
 public class Main {
