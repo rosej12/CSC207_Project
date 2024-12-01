@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class DrawingView extends JPanel implements ActionListener, PropertyChangeListener {
@@ -190,9 +191,10 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         drawingController.executeClear();
     }
 
-    private class DrawingPanel extends JPanel {
+    public class DrawingPanel extends JPanel {
         private Image image;
         private Graphics2D g2;
+        private ArrayList<Graphics> graphicsList = new ArrayList<Graphics>();
 
         public DrawingPanel() {
             setDoubleBuffered(false);
@@ -212,9 +214,11 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                     if (g2 != null) {
                         g2.setColor(currentColor);
                         g2.drawLine(prevX, prevY, x, y);
+
                         for (int i = 1; i < drawSize; i++) {
                             g2.drawLine(prevX + i, prevY + i, x + i, y + i);
                             g2.drawLine(prevX - i, prevY - i, x - i, y - i);
+                            graphicsList.add(g2);
                         }
 
                         repaint();
@@ -262,6 +266,10 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                 }
             }
             return true;
+        }
+
+        public ArrayList<Graphics> getGraphicsList(Graphics2D g2) {
+            return graphicsList;
         }
     }
 

@@ -11,15 +11,13 @@ public class AutoSave {
     private static JFileChooser fileChooser;
     private Boolean isDataChanged;
 
-    public static void autoSaveDrawing() {
+    public static void fileFinder() {
         // if file not saved in a file ==> DrawingView.saveDrawing()
         // elif file saved ==> auto save
-        // fileChooser == file
-        int option = fileChooser.showSaveDialog(this);
-        if (option == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            DrawingView.DrawingPanel panel = (DrawingView.DrawingPanel) getComponent(0);
-            drawingController.executeSave((RenderedImage) panel.getImage(), file);
-        }
+    }
+
+    public Boolean fileChangeFinder(){
+        fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     }
 }
