@@ -14,7 +14,7 @@ public class AutoSave {
     private static String tempFolderPath = new File("").getAbsolutePath();
     private static ArrayList<File> savedStates = new ArrayList<>();
 
-    public AutoSave(String tempFolderPath) {
+    public AutoSave() {
         this.Image = DrawingView.DrawingPanel.getImage();
         AutoSave.tempFolderPath = tempFolderPath;
         savedStates = new ArrayList<>();
