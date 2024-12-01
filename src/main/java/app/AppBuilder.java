@@ -112,7 +112,7 @@ public class AppBuilder {
         frame.setLocationRelativeTo(null);
         frame.add(cardPanel);
 
-        viewManagerModel.setState(renderView.getViewName());
+        viewManagerModel.setState(drawingView.getViewName());
         viewManagerModel.firePropertyChanged();
         return frame;
     }
