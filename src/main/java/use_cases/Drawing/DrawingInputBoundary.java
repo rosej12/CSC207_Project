@@ -7,4 +7,6 @@ public interface DrawingInputBoundary {
      void executeSave(RenderedImage image, File file);
 
      void executeClear();
+
+     void switchToRenderView();
 }

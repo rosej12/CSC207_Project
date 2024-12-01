@@ -33,4 +33,9 @@ public class DrawingInteractor implements DrawingInputBoundary {
     public void executeClear() {
         outputBoundary.prepareSuccessView(null);
     }
+
+    @Override
+    public void switchToRenderView() {
+        outputBoundary.switchToRenderView();
+    }
 }

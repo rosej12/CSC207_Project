@@ -20,4 +20,9 @@ public class DrawingController {
     public void executeClear() {
         drawingInteractor.executeClear();
     }
+
+    public void switchToRenderView() {
+        drawingInteractor.switchToRenderView();
+    }
+
 }

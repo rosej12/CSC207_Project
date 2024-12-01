@@ -7,4 +7,6 @@ public interface DrawingOutputBoundary {
     void prepareSuccessView(RenderedImage drawing);
 
     void prepareFailView(String errorMessage);
+
+    void switchToRenderView();
 }

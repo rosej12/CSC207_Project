@@ -19,9 +19,11 @@ import java.io.File;
 
 public class DrawingView extends JPanel implements ActionListener, PropertyChangeListener {
 
+    private final String viewName = "drawing";
     private final DrawingViewModel drawingViewModel;
     private final JButton saveButton = new JButton("Save");
     private final JButton clearButton = new JButton("Clear All");
+    private final JButton toRenderButton = new JButton("To Render");
     private int prevX, prevY;
     private DrawingController drawingController;
 
@@ -44,6 +46,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
         saveButton.addActionListener(evt -> saveDrawing());
         clearButton.addActionListener(evt -> clearDrawing());
+        toRenderButton.addActionListener(evt -> switchToRenderView());
 
         this.add(panel, BorderLayout.CENTER);
         this.add(buttonsPanel, BorderLayout.SOUTH);
@@ -61,6 +64,10 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
     private void clearDrawing() {
         drawingController.executeClear();
+    }
+
+    private void switchToRenderView() {
+        drawingController.switchToRenderView();
     }
 
     private class DrawingPanel extends JPanel {
@@ -158,5 +165,9 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
     public void setDrawingController(DrawingController controller) {
         this.drawingController = controller;
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }
