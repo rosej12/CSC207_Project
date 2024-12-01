@@ -3,7 +3,9 @@ package view;
 import interface_adapter.Drawing.DrawingController;
 import interface_adapter.Drawing.DrawingState;
 import interface_adapter.Drawing.DrawingViewModel;
+import use_cases.Drawing.auto_save.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -45,6 +47,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
     private Color[] colorPalette;
     private boolean[] colorLocks;
     private JButton[] colorButtons;
+    public AutoSave autoSave = new AutoSave("");
 
     // TODO: may need to move
     private Color backgroundColor = Color.WHITE;
@@ -177,6 +180,12 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         currentColor = drawingColor;
     }
 
+    public void saveToFile(String filePath) {
+        File file = new File(filePath);
+        DrawingPanel panel = (DrawingPanel) getComponent(0);
+        drawingController.executeSave((RenderedImage)panel.getImage(), file);
+    }
+
     private void saveDrawing() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showSaveDialog(this);
@@ -187,12 +196,13 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         }
     }
 
+
     private void clearDrawing() {
         drawingController.executeClear();
     }
 
     public class DrawingPanel extends JPanel {
-        private Image image;
+        private static Image image;
         private Graphics2D g2;
         private ArrayList<Graphics> graphicsList = new ArrayList<Graphics>();
 
@@ -218,7 +228,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                         for (int i = 1; i < drawSize; i++) {
                             g2.drawLine(prevX + i, prevY + i, x + i, y + i);
                             g2.drawLine(prevX - i, prevY - i, x - i, y - i);
-                            graphicsList.add(g2);
+                            AutoSave.saveCanvasState();
                         }
 
                         repaint();
@@ -250,7 +260,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
             }
         }
 
-        public Image getImage() {
+        public static Image getImage() {
             return image;
         }
 
