@@ -1,11 +1,12 @@
 package view;
 
+import entities.ColorPalette;
 import interface_adapter.Drawing.DrawingController;
 import interface_adapter.Drawing.DrawingState;
 import interface_adapter.Drawing.DrawingViewModel;
-import use_cases.Drawing.auto_save.*;
+import interface_adapter.ViewManagerModel;
+import use_cases.ImageToColorPalette.ColorPaletteRepositoryInterface;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -20,14 +21,20 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Random;
 
-public class DrawingView extends JPanel implements ActionListener, PropertyChangeListener {
-
+public class DrawingView extends JPanel implements PropertyChangeListener {
+    private final String viewName = "Drawing";
     private final DrawingViewModel drawingViewModel;
+    private DrawingController drawingController;
+    private final ViewManagerModel viewManagerModel;
+    private final ColorPaletteRepositoryInterface colorPaletteRepository;
+
     private final JButton saveButton = new JButton("Save");
     private final JButton clearButton = new JButton("Clear All");
+    private final JButton generateColorButton = new JButton("Generate Colors");
+    private final JButton imageToColorButton = new JButton("Generate Color from Image");
+
     private final ButtonGroup toolButtonGroup = new ButtonGroup();
     private final JRadioButton paintButton = new JRadioButton("Paint");
     private final JRadioButton eraseButton = new JRadioButton("Erase");
@@ -43,38 +50,45 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
     private int drawSize = 1;
     private int eraseSize;
     private int paintSize;
-    private DrawingController drawingController;
-    private Color[] colorPalette;
-    private boolean[] colorLocks;
+
+    private Color currentColor = Color.BLACK;
+    private DrawingPanel drawingPanel;
     private JButton[] colorButtons;
-    public AutoSave autoSave = new AutoSave("");
+    private JPanel buttonsPanel;
 
-    // TODO: may need to move
-    private Color backgroundColor = Color.WHITE;
-    private Color drawingColor = Color.BLACK;
-    private Color currentColor = drawingColor;
-
-    public DrawingView(DrawingViewModel drawingViewModel) {
+    public DrawingView(DrawingViewModel drawingViewModel, ViewManagerModel viewManagerModel,
+                       ColorPaletteRepositoryInterface colorPaletteRepository) {
         this.drawingViewModel = drawingViewModel;
+        this.viewManagerModel = viewManagerModel;
         this.drawingViewModel.addPropertyChangeListener(this);
-        colorPalette = new Color[3];
-        colorLocks = new boolean[3];
-        colorButtons = new JButton[3];
-
-        generateRandomColorPalette();
+        this.colorPaletteRepository = colorPaletteRepository;
 
         setLayout(new BorderLayout());
 
-        DrawingPanel panel = new DrawingPanel();
+        drawingPanel = new DrawingPanel();
 
-        JPanel buttonsPanel = new JPanel();
+        // Initialize buttonsPanel before using it in updateColorPalette
+        buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        // Add other buttons to buttonsPanel
         buttonsPanel.add(saveButton);
         buttonsPanel.add(clearButton);
+        buttonsPanel.add(generateColorButton);
+        buttonsPanel.add(imageToColorButton);
 
-        saveButton.addActionListener(evt -> saveDrawing());
-        clearButton.addActionListener(evt -> clearDrawing());
+        // Set up action listeners for buttons
+        saveButton.addActionListener(e -> saveDrawing());
+        clearButton.addActionListener(e -> clearDrawing());
+        generateColorButton.addActionListener(e -> generateRandomColors());
+        imageToColorButton.addActionListener(e -> switchToImageToColorPaletteView());
 
+        // Initialize color palette buttons
+        updateColorPalette();
+
+        colorPaletteRepository.addPropertyChangeListener(this);
+
+        // Top panel with tools
         JPanel toolsPanel = new JPanel();
         toolButtonGroup.add(paintButton);
         toolButtonGroup.add(eraseButton);
@@ -109,81 +123,33 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         eraseButton.addActionListener(evt -> eraseTool());
         paintButton.addActionListener(evt -> paintTool());
 
-        JButton randomColorButton = new JButton("Generate Colors");
-        randomColorButton.addActionListener(e -> generateRandomColorPalette());
-        buttonsPanel.add(randomColorButton);
+        paintButton.addActionListener(e -> currentColor = Color.BLACK);
+        eraseButton.addActionListener(e -> currentColor = Color.WHITE);
 
-        for (int i = 0; i < colorPalette.length; i++) {
-            JButton colorButton = new JButton();
-            int index = i;
-            colorButton.setBackground(colorPalette[index]);
-            colorButton.addActionListener(e -> selectSlot(index));
-            buttonsPanel.add(colorButton);
-            colorButtons[i] = colorButton;
-        }
-
-        JButton colorPickerButton = new JButton("Pick Color");
-        colorPickerButton.addActionListener(e -> openColorPicker());
-        buttonsPanel.add(colorPickerButton);
-
-        this.add(panel, BorderLayout.CENTER);
+        this.add(drawingPanel, BorderLayout.CENTER);
         this.add(buttonsPanel, BorderLayout.SOUTH);
         this.add(toolsPanel, BorderLayout.NORTH);
     }
 
-    private void generateRandomColorPalette() {
-        Random rand = new Random();
-        for (int i = 0; i < colorPalette.length; i++) {
-            if (!colorLocks[i]) {
-                colorPalette[i] = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
-            }
-        }
-        updateColorButtons();
+    // Method to switch to ImageToColorPaletteView
+    private void switchToImageToColorPaletteView() {
+        viewManagerModel.setState("ImageToColorPalette");
+        viewManagerModel.firePropertyChanged();
     }
 
-    private void selectSlot(int index) {
-        currentColor = colorPalette[index];
-    }
-
-    private void toggleColorLock(int index) {
-        colorLocks[index] = !colorLocks[index];
-    }
-
-    private void openColorPicker() {
-        Color selectedColor = JColorChooser.showDialog(this, "Select Color", currentColor);
-        if (selectedColor != null) {
-            for (int i = 0; i < colorPalette.length; i++) {
-                if (colorButtons[i].getBackground().equals(currentColor)) {
-                    colorPalette[i] = selectedColor;
-                    break;
-                }
-            }
-            updateColorButtons();
-        }
-    }
-
-    private void updateColorButtons() {
-        for (int i = 0; i < colorPalette.length; i++) {
-            if (colorButtons[i] != null) {
-                colorButtons[i].setBackground(colorPalette[i]);
-            }
-        }
+    // Placeholder method for generating random colors
+    private void generateRandomColors() {
+        // Implement your color generation logic here
     }
 
     private void eraseTool() {
         drawSize = eraseSize;
-        currentColor = backgroundColor;
+        currentColor = Color.WHITE;
     }
 
     private void paintTool() {
         drawSize = paintSize;
-        currentColor = drawingColor;
-    }
-
-    public void saveToFile(String filePath) {
-        File file = new File(filePath);
-        DrawingPanel panel = (DrawingPanel) getComponent(0);
-        drawingController.executeSave((RenderedImage)panel.getImage(), file);
+        currentColor = Color.BLACK;
     }
 
     private void saveDrawing() {
@@ -191,20 +157,83 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         int option = fileChooser.showSaveDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            DrawingPanel panel = (DrawingPanel) getComponent(0);
-            drawingController.executeSave((RenderedImage) panel.getImage(), file);
+            RenderedImage image = (RenderedImage) drawingPanel.getImage();
+            drawingController.executeSave(image, file);
         }
     }
-
 
     private void clearDrawing() {
         drawingController.executeClear();
     }
 
-    public class DrawingPanel extends JPanel {
-        private static Image image;
+    private void updateColorPalette() {
+        // Retrieve the color palette from the repository
+        ColorPalette colorPalette = colorPaletteRepository.getColorPalette();
+
+        if (colorPalette != null) {
+            // Update UI components (color buttons)
+            // Remove existing color buttons if any
+            if (colorButtons != null) {
+                for (JButton colorButton : colorButtons) {
+                    buttonsPanel.remove(colorButton);
+                }
+            }
+
+            // Create new color buttons
+            int paletteSize = colorPalette.size();
+            colorButtons = new JButton[paletteSize];
+            for (int i = 0; i < paletteSize; i++) {
+                JButton colorButton = new JButton();
+                entities.Color colorEntity = colorPalette.getColor(i);
+                java.awt.Color awtColor = new java.awt.Color(colorEntity.getRed(), colorEntity.getGreen(), colorEntity.getBlue());
+                colorButton.setBackground(awtColor);
+                int index = i;
+                colorButton.addActionListener(e -> selectColor(index));
+                buttonsPanel.add(colorButton);
+                colorButtons[i] = colorButton;
+            }
+
+            // Refresh the panel
+            buttonsPanel.revalidate();
+            buttonsPanel.repaint();
+        }
+    }
+
+    private void selectColor(int index) {
+        entities.Color color = colorPaletteRepository.getColorPalette().getColor(index);
+        currentColor = new java.awt.Color(
+                color.getRed(), color.getGreen(), color.getBlue());
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final DrawingState state = drawingViewModel.getState();
+
+        if ("colorPalette".equals(evt.getPropertyName())) {
+            updateColorPalette();
+        }
+
+        if (state.getError() != null) {
+            JOptionPane.showMessageDialog(this, state.getError(), "Error", JOptionPane.ERROR_MESSAGE);
+            state.setError(null); // Reset error after displaying
+        }
+
+        if (state.getDrawing() == null) {
+            drawingPanel.clear();
+        }
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public void setDrawingController(DrawingController controller) {
+        this.drawingController = controller;
+    }
+
+    private class DrawingPanel extends JPanel {
+        private Image image;
         private Graphics2D g2;
-        private ArrayList<Graphics> graphicsList = new ArrayList<Graphics>();
 
         public DrawingPanel() {
             setDoubleBuffered(false);
@@ -213,6 +242,9 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                 public void mousePressed(MouseEvent e) {
                     prevX = e.getX();
                     prevY = e.getY();
+                    g2.setColor(currentColor);
+                    g2.drawLine(e.getX(), e.getY(), e.getX(), e.getY());
+                    repaint();
                 }
             });
             addMouseMotionListener(new MouseMotionAdapter() {
@@ -221,20 +253,16 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
                     int x = e.getX();
                     int y = e.getY();
 
-                    if (g2 != null) {
-                        g2.setColor(currentColor);
-                        g2.drawLine(prevX, prevY, x, y);
-
-                        for (int i = 1; i < drawSize; i++) {
-                            g2.drawLine(prevX + i, prevY + i, x + i, y + i);
-                            g2.drawLine(prevX - i, prevY - i, x - i, y - i);
-                            AutoSave.saveCanvasState();
-                        }
-
-                        repaint();
-                        prevX = x;
-                        prevY = y;
+                    g2.setColor(currentColor);
+                    g2.drawLine(prevX, prevY, x, y);
+                    for (int i = 1; i < drawSize; i++) {
+                        g2.drawLine(prevX + i, prevY + i, x + i, y + i);
+                        g2.drawLine(prevX - i, prevY - i, x - i, y - i);
                     }
+
+                    repaint();
+                    prevX = x;
+                    prevY = y;
                 }
             });
         }
@@ -245,7 +273,8 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
             if (image == null) {
                 image = createImage(getSize().width, getSize().height);
                 g2 = (Graphics2D) image.getGraphics();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Color.WHITE);
+                g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setColor(currentColor);
             }
             g.drawImage(image, 0, 0, null);
@@ -253,62 +282,16 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
 
         public void clear() {
             if (g2 != null) {
-                g2.setPaint(backgroundColor);
+                g2.setPaint(Color.WHITE);
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setPaint(currentColor);
                 repaint();
             }
         }
 
-        public static Image getImage() {
+        public Image getImage() {
             return image;
         }
-
-        public boolean isDrawingEmpty() {
-            if (image instanceof BufferedImage) {
-                BufferedImage bufferedImage = (BufferedImage) image;
-                for (int x = 0; x < bufferedImage.getWidth(); x++) {
-                    for (int y = 0; y < bufferedImage.getHeight(); y++) {
-                        if (bufferedImage.getRGB(x, y) != backgroundColor.getRGB()) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-
-        public ArrayList<Graphics> getGraphicsList(Graphics2D g2) {
-            return graphicsList;
-        }
-    }
-
-    public void actionPerformed(ActionEvent evt) {
-        System.out.println("Click " + evt.getActionCommand());
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        final DrawingState state = (DrawingState) evt.getNewValue();
-        setFields(state);
-        if (state.getError() != null) {
-            JOptionPane.showMessageDialog(this, state.getError(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void setFields(DrawingState state) {
-        DrawingPanel panel = (DrawingPanel) getComponent(0);
-        panel.clear();
-        if (state.getDrawing() != null) {
-            Graphics2D g2 = (Graphics2D) panel.getImage().getGraphics();
-            g2.drawImage((Image) state.getDrawing(), 0, 0, null);
-            panel.repaint();
-        }
-    }
-
-    public void setDrawingController(DrawingController controller) {
-        this.drawingController = controller;
     }
 
     public DrawingController getDrawingController(){
