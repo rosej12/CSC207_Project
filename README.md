@@ -32,7 +32,7 @@ APIs used:
 ***
 - [ ] Let the user undo/redo brush strokes and autosave
 ***
-- [ ] Generate random color palette and let user be able to "lock" certain colors and manually change some colours.
+- [ ] Generate random color palette and let user be able to "lock" certain colors and manually change some colors.
 ***
 - [ ] Generate color palette from an uploaded image (api)
 ***

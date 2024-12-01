@@ -166,7 +166,6 @@ public class ColorAPI {
             for (int i = 0; i < imgColors.length(); i++) {
                 JSONObject color = imgColors.getJSONObject(i);
                 hexColors[i] = color.getString("closest_palette_color_html_code");
-                System.out.println(hexColors[i] + " (" + color.getString("closest_palette_color") + ")");
             }
 
             // display colors
