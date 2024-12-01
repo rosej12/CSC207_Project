@@ -8,6 +8,8 @@ import interface_adapter.ViewManagerModel;
 import use_cases.ImageToColorPalette.ColorPaletteRepositoryInterface;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +38,18 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private final ButtonGroup toolButtonGroup = new ButtonGroup();
     private final JRadioButton paintButton = new JRadioButton("Paint");
     private final JRadioButton eraseButton = new JRadioButton("Erase");
+
+    int initialSize = 1;
+    SpinnerNumberModel paintModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1 );
+    private final JSpinner paintSizeSpinner =  new JSpinner(paintModel);
+
+    SpinnerNumberModel eraseModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1 );
+    private final JSpinner eraseSizeSpinner =  new JSpinner(eraseModel);
+
+    private int prevX, prevY;
+    private int drawSize = 1;
+    private int eraseSize;
+    private int paintSize;
 
     private Color currentColor = Color.BLACK;
     private DrawingPanel drawingPanel;
@@ -79,8 +93,35 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         toolButtonGroup.add(paintButton);
         toolButtonGroup.add(eraseButton);
         paintButton.setSelected(true);
+
+        // Paint Size Spinner
+        JLabel pSize = new JLabel("Paint Size");
+        toolsPanel.add(pSize);
+        toolsPanel.add(paintSizeSpinner);
+        paintSizeSpinner.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                paintSize = (int) paintSizeSpinner.getValue();
+                drawSize = paintSize;
+            }
+        });
+
         toolsPanel.add(paintButton);
+
+        // Eraser Size Spinner
         toolsPanel.add(eraseButton);
+
+        JLabel eSize = new JLabel("Erase Size");
+        toolsPanel.add(eSize);
+        toolsPanel.add(eraseSizeSpinner);
+        eraseSizeSpinner.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                eraseSize = (int) eraseSizeSpinner.getValue();
+                drawSize = eraseSize;
+            }
+        });
+
+        eraseButton.addActionListener(evt -> eraseTool());
+        paintButton.addActionListener(evt -> paintTool());
 
         paintButton.addActionListener(e -> currentColor = Color.BLACK);
         eraseButton.addActionListener(e -> currentColor = Color.WHITE);
@@ -99,6 +140,16 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     // Placeholder method for generating random colors
     private void generateRandomColors() {
         // Implement your color generation logic here
+    }
+
+    private void eraseTool() {
+        drawSize = eraseSize;
+        currentColor = Color.WHITE;
+    }
+
+    private void paintTool() {
+        drawSize = paintSize;
+        currentColor = Color.BLACK;
     }
 
     private void saveDrawing() {
@@ -189,6 +240,8 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
+                    prevX = e.getX();
+                    prevY = e.getY();
                     g2.setColor(currentColor);
                     g2.drawLine(e.getX(), e.getY(), e.getX(), e.getY());
                     repaint();
@@ -197,9 +250,19 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
             addMouseMotionListener(new MouseMotionAdapter() {
                 @Override
                 public void mouseDragged(MouseEvent e) {
+                    int x = e.getX();
+                    int y = e.getY();
+
                     g2.setColor(currentColor);
-                    g2.fillOval(e.getX(), e.getY(), 5, 5);
+                    g2.drawLine(prevX, prevY, x, y);
+                    for (int i = 1; i < drawSize; i++) {
+                        g2.drawLine(prevX + i, prevY + i, x + i, y + i);
+                        g2.drawLine(prevX - i, prevY - i, x - i, y - i);
+                    }
+
                     repaint();
+                    prevX = x;
+                    prevY = y;
                 }
             });
         }
@@ -229,5 +292,9 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         public Image getImage() {
             return image;
         }
+    }
+
+    public DrawingController getDrawingController(){
+        return drawingController;
     }
 }
