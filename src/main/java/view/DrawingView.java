@@ -156,7 +156,8 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
     }
 
     private void switchToRenderView() {
-        drawingController.switchToRenderView();
+        DrawingPanel panel = (DrawingPanel) getComponent(0);
+        drawingController.switchToRenderView(panel.getImage());
     }
 
     private class DrawingPanel extends JPanel {

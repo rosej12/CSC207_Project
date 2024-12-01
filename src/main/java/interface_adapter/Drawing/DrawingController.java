@@ -2,6 +2,7 @@ package interface_adapter.Drawing;
 
 import use_cases.Drawing.DrawingInputBoundary;
 
+import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.io.File;
 
@@ -21,8 +22,8 @@ public class DrawingController {
         drawingInteractor.executeClear();
     }
 
-    public void switchToRenderView() {
-        drawingInteractor.switchToRenderView();
+    public void switchToRenderView(Image sketch) {
+        drawingInteractor.switchToRenderView(sketch);
     }
 
 }

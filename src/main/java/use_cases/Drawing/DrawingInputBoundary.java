@@ -1,5 +1,6 @@
 package use_cases.Drawing;
 
+import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.io.File;
 
@@ -8,5 +9,5 @@ public interface DrawingInputBoundary {
 
      void executeClear();
 
-     void switchToRenderView();
+     void switchToRenderView(Image image);
 }

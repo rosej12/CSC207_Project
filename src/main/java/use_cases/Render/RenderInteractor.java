@@ -1,5 +1,7 @@
 package use_cases.Render;
 
+import java.awt.*;
+
 /**
  * The Render Interactor.
  */
@@ -14,7 +16,20 @@ public class RenderInteractor implements RenderInputBoundary {
 
     @Override
     public void execute(RenderInputData renderInputData) {
-        // TODO: implement
+        if (renderInputData.getDescription().length() > 5000) {
+            renderPresenter.prepareFailView("Description is longer than 5000 characters.");
+        } else if (renderInputData.getDescription().isEmpty()) {
+            renderPresenter.prepareFailView("Description is empty.");
+        } else {
+            Image renderedImage = renderDataAccessObject.getRender(
+                    renderInputData.getDescription(), renderInputData.getSketch());
+            if (renderedImage == null) {
+                renderPresenter.prepareFailView("Error Generating Image.");
+            } else {
+                final RenderOutputData renderOutputData = new RenderOutputData(renderedImage);
+                renderPresenter.prepareSuccessView(renderOutputData);
+            }
+        }
     }
 
     @Override

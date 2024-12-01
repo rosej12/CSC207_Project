@@ -21,13 +21,18 @@ public class RenderPresenter implements RenderOutputBoundary {
     @Override
     public void prepareSuccessView(RenderOutputData outputData) {
         // On success, update the render states that are shown on the render view
-
+        final RenderState renderState = renderViewModel.getState();
+        renderState.setRender(outputData.getRenderedImage());
+        renderViewModel.setState(renderState);
+        renderViewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        // on failure, update the render states that are shown on the render view
-
+        // On failure, update the error message shown on render view
+        final RenderState renderState = renderViewModel.getState();
+        renderState.setRenderError(errorMessage);
+        renderViewModel.firePropertyChanged();
     }
 
     @Override

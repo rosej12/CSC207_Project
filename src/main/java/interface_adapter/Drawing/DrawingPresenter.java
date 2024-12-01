@@ -4,6 +4,8 @@ import interface_adapter.Render.RenderViewModel;
 import interface_adapter.ViewManagerModel;
 import use_cases.Drawing.DrawingOutputBoundary;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.RenderedImage;
 
 public class DrawingPresenter implements DrawingOutputBoundary {
@@ -32,10 +34,11 @@ public class DrawingPresenter implements DrawingOutputBoundary {
     }
 
     @Override
-    public void switchToRenderView() {
+    public void switchToRenderView(Image sketch) {
         viewManagerModel.setState(renderViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
+        renderViewModel.getState().setSketch(sketch);
+        renderViewModel.firePropertyChanged();
     }
-
 
 }
