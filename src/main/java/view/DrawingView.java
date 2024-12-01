@@ -57,6 +57,7 @@ public class DrawingView extends JPanel implements ActionListener, PropertyChang
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         buttonsPanel.add(saveButton);
         buttonsPanel.add(clearButton);
+        buttonsPanel.add(toRenderButton);
 
         saveButton.addActionListener(evt -> saveDrawing());
         clearButton.addActionListener(evt -> clearDrawing());

@@ -33,7 +33,7 @@ public class DrawingPresenter implements DrawingOutputBoundary {
 
     @Override
     public void switchToRenderView() {
-        viewManagerModel.setState(drawingViewModel.getViewName());
+        viewManagerModel.setState(renderViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 
