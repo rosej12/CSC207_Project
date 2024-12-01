@@ -13,6 +13,8 @@ import java.io.IOException;
 
 public class RenderDataAccessObject implements RenderDataAccessInterface {
 
+
+//     TODO: either delete the saving or make it a feature/use case
     private final String sketchFileName = "sketch.png";
     private final String outputPath = "src/main/resources/render.jpg";
     private final String sketchFilePath = "src/main/resources/" + sketchFileName;
@@ -28,9 +30,7 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
         Image image = bytesToImage(bytes);
 
         // Save Render
-        if (image == null) {
-            saveImage(image, outputPath);
-        }
+        saveImage(image, outputPath);
 
         return image;
     }
