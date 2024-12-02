@@ -1,16 +1,18 @@
 package entities;
 
 public class Color {
-    private final int red;
-    private final int green;
-    private final int blue;
+    private int red;
+    private int green;
+    private int blue;
     private final String hexCode;
+    private boolean isLocked;
 
     public Color(int red, int green, int blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
         this.hexCode = String.format("#%02x%02x%02x", red, green, blue);
+        this.isLocked = false;
     }
 
     public Color(String hexCode) {
@@ -34,5 +36,25 @@ public class Color {
 
     public String getHexCode() {
         return hexCode;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setRed(int red) {
+        this.red = red;
+    }
+
+    public void setGreen(int green) {
+        this.green = green;
+    }
+
+    public void setBlue(int blue) {
+        this.blue = blue;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
     }
 }

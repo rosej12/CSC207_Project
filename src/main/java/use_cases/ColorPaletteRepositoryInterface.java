@@ -1,4 +1,4 @@
-package use_cases.ImageToColorPalette;
+package use_cases;
 
 import entities.ColorPalette;
 

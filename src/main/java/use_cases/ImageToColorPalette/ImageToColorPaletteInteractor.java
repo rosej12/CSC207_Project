@@ -2,6 +2,7 @@ package use_cases.ImageToColorPalette;
 
 import entities.Color;
 import entities.ColorPalette;
+import use_cases.ColorPaletteRepositoryInterface;
 
 import java.io.File;
 import java.io.IOException;
