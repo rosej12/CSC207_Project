@@ -25,7 +25,7 @@ APIs used:
 - [ ] Basic Drawing Functionality:
   - [x] Draw 
   - [x] Save as image
-  - [x] Erase 
+  - [ ] Erase 
   - [ ] Draw shapes
   - [ ] Draw with different brush size
   - [ ] Fill (fills in the space around the mouse that is enclosed by brush strokes)

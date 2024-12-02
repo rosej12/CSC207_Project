@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.Random;
 
 public class DrawingView extends JPanel implements PropertyChangeListener {
+
     private final String viewName = "Drawing";
     private final DrawingViewModel drawingViewModel;
     private DrawingController drawingController;
@@ -34,6 +35,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private final JButton clearButton = new JButton("Clear All");
     private final JButton generateColorButton = new JButton("Generate Colors");
     private final JButton imageToColorButton = new JButton("Generate Color from Image");
+    private final JButton toRenderButton = new JButton("To Render");
 
     private final ButtonGroup toolButtonGroup = new ButtonGroup();
     private final JRadioButton paintButton = new JRadioButton("Paint");
@@ -74,6 +76,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         // Add other buttons to buttonsPanel
         buttonsPanel.add(saveButton);
         buttonsPanel.add(clearButton);
+        buttonsPanel.add(toRenderButton);
         buttonsPanel.add(generateColorButton);
         buttonsPanel.add(imageToColorButton);
 
@@ -82,6 +85,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         clearButton.addActionListener(e -> clearDrawing());
         generateColorButton.addActionListener(e -> generateRandomColors());
         imageToColorButton.addActionListener(e -> switchToImageToColorPaletteView());
+        toRenderButton.addActionListener(evt -> switchToRenderView());
 
         // Initialize color palette buttons
         updateColorPalette();
@@ -223,12 +227,13 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    public String getViewName() {
-        return viewName;
-    }
-
     public void setDrawingController(DrawingController controller) {
         this.drawingController = controller;
+    }
+
+    private void switchToRenderView() {
+        DrawingPanel panel = (DrawingPanel) getComponent(0);
+        drawingController.switchToRenderView(panel.getImage());
     }
 
     private class DrawingPanel extends JPanel {
@@ -296,5 +301,9 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
     public DrawingController getDrawingController(){
         return drawingController;
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }
