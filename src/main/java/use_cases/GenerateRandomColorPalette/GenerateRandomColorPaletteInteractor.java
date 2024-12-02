@@ -2,6 +2,7 @@ package use_cases.GenerateRandomColorPalette;
 
 import entities.Color;
 import entities.ColorPalette;
+import use_cases.ColorPaletteRepositoryInterface;
 
 import java.util.ArrayList;
 import java.util.List;

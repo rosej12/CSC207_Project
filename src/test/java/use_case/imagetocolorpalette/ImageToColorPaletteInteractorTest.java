@@ -7,6 +7,7 @@ import entities.ColorPalette;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import use_cases.ColorPaletteRepositoryInterface;
 import use_cases.ImageToColorPalette.ImageToColorPaletteDataAccessInterface;
 import use_cases.ImageToColorPalette.ImageToColorPaletteInputBoundary;
 import use_cases.ImageToColorPalette.ImageToColorPaletteOutputBoundary;
