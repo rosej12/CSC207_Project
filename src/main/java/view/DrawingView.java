@@ -42,11 +42,11 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private final JRadioButton eraseButton = new JRadioButton("Erase");
 
     int initialSize = 1;
-    SpinnerNumberModel paintModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1 );
-    private final JSpinner paintSizeSpinner =  new JSpinner(paintModel);
+    SpinnerNumberModel paintModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1);
+    private final JSpinner paintSizeSpinner = new JSpinner(paintModel);
 
-    SpinnerNumberModel eraseModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1 );
-    private final JSpinner eraseSizeSpinner =  new JSpinner(eraseModel);
+    SpinnerNumberModel eraseModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1);
+    private final JSpinner eraseSizeSpinner = new JSpinner(eraseModel);
 
     private int prevX, prevY;
     private int drawSize = 1;
@@ -307,7 +307,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    public DrawingController getDrawingController(){
+    public DrawingController getDrawingController() {
         return drawingController;
     }
 

@@ -1,17 +1,14 @@
-package use_cases.StatusManagement;
+package use_cases.StatusManagement.UndoRedo;
 
 import view.DrawingView.DrawingPanel;
 
-import javax.swing.*;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Stack;
 
-public class UndoRedo implements UndoRedoInteractor {
+public class UndoRedoInteractor implements UndoRedoInterface {
     private final Stack<DrawingPanel> undoStack = new Stack<>();
     private final Stack<DrawingPanel> redoStack = new Stack<>();
 
-    public UndoRedo() {
+    public UndoRedoInteractor() {
 
     }
 
