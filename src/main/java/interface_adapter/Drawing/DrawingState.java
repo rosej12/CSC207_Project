@@ -3,15 +3,15 @@ package interface_adapter.Drawing;
 import java.awt.image.RenderedImage;
 
 public class DrawingState {
-    private RenderedImage drawing;
+    private static RenderedImage drawing;
     private String error;
 
-    public RenderedImage getDrawing() {
+    public static RenderedImage getDrawing() {
         return drawing;
     }
 
     public void setDrawing(RenderedImage drawing) {
-        this.drawing = drawing;
+        DrawingState.drawing = drawing;
     }
 
     public String getError() {
