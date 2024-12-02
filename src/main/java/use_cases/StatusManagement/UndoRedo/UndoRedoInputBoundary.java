@@ -1,4 +1,4 @@
 package use_cases.StatusManagement.UndoRedo;
 
-public class UndoRedoInputBoundary {
+public interface UndoRedoInputBoundary {
 }

@@ -1,5 +1,4 @@
 package interface_adapter.StatusManagement;
 
-public class CanvasPanel {
-
+public class StatusPresenter {
 }

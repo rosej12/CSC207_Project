@@ -163,7 +163,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         drawingController.executeSave(canva, file);
     }
 
-    public String saveDrawing() {
+    public void saveDrawing() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showSaveDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
@@ -171,7 +171,6 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
             RenderedImage image = (RenderedImage) drawingPanel.getImage();
             drawingController.executeSave(image, file);
         }
-        return file.getAbsolutePath();
     }
 
     private void clearDrawing() {
