@@ -2,11 +2,11 @@ package interface_adapters.imagetocolorpalette;
 
 import entities.Color;
 import entities.ColorPalette;
-import interface_adapter.ImageToColorPalette.ImageToColorPalettePresenter;
-import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
+import interfaceadapters.ImageToColorPalette.ImageToColorPalettePresenter;
+import interfaceadapters.ImageToColorPalette.ImageToColorPaletteViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import use_cases.ImageToColorPalette.ImageToColorPaletteResponseModel;
+import usecases.ImageToColorPalette.ImageToColorPaletteResponseModel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

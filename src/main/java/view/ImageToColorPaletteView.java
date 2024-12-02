@@ -1,27 +1,30 @@
 package view;
 
-import entities.ColorPalette;
-import entities.Color;
-import interface_adapter.Drawing.DrawingController;
-import interface_adapter.ImageToColorPalette.ImageToColorPaletteController;
-import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
-import interface_adapter.ViewManagerModel;
-
-import javax.swing.*;
-import javax.swing.text.View;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import entities.Color;
+import entities.ColorPalette;
+import interfaceadapters.ImageToColorPalette.ImageToColorPaletteController;
+import interfaceadapters.ImageToColorPalette.ImageToColorPaletteViewModel;
+import interfaceadapters.ViewManagerModel;
+
 public class ImageToColorPaletteView extends JPanel implements ActionListener, PropertyChangeListener {
-    private final String viewName = "ImageToColorPalette";
+    private static final int DIMENSIONALITY = 100;
     private final ImageToColorPaletteViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
-    private final JButton backButton = new JButton("Back");
-    private final JButton uploadButton = new JButton("Upload Image");
     private ImageToColorPaletteController imageToColorPaletteController;
 
     public ImageToColorPaletteView(ImageToColorPaletteViewModel viewModel, ViewManagerModel viewManagerModel) {
@@ -34,10 +37,12 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
 
         // Panel for buttons
         JPanel buttonsPanel = new JPanel();
+        JButton uploadButton = new JButton("Upload Image");
         buttonsPanel.add(uploadButton);
+        JButton backButton = new JButton("Back");
         buttonsPanel.add(backButton);
 
-        uploadButton.addActionListener(e -> {
+        uploadButton.addActionListener(event -> {
             JFileChooser fileChooser = new JFileChooser();
             int option = fileChooser.showOpenDialog(ImageToColorPaletteView.this);
             if (option == JFileChooser.APPROVE_OPTION) {
@@ -46,7 +51,7 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
             }
         });
 
-        backButton.addActionListener(e -> switchToDrawingView());
+        backButton.addActionListener(event -> switchToDrawingView());
 
         add(buttonsPanel, BorderLayout.NORTH);
     }
@@ -60,7 +65,8 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
     public void propertyChange(PropertyChangeEvent evt) {
         if ("colorPalette".equals(evt.getPropertyName())) {
             displayColors(viewModel.getState().getColorPalette());
-        } else if ("error".equals(evt.getPropertyName())) {
+        }
+        else if ("error".equals(evt.getPropertyName())) {
             displayError(viewModel.getState().getErrorMessage());
         }
     }
@@ -76,7 +82,7 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
             JLabel label = new JLabel();
             label.setOpaque(true);
             label.setBackground(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
-            label.setPreferredSize(new Dimension(100, 100));
+            label.setPreferredSize(new Dimension(DIMENSIONALITY, DIMENSIONALITY));
             colorPanel.add(label);
         }
         add(colorPanel, BorderLayout.CENTER);
@@ -89,8 +95,20 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
 
     }
 
-    public String getViewName() {return viewName;}
+    /**
+     * Retrieves the name of the view.
+     *
+     * @return The name of the view as a {@code String}.
+     */
+    public String getViewName() {
+        return "ImageToColorPalette";
+    }
 
+    /**
+     * Sets the controller responsible for handling image-to-color-palette functionality.
+     *
+     * @param controller The {@link ImageToColorPaletteController} to be set.
+     */
     public void setImageToColorPaletteController(ImageToColorPaletteController controller) {
         this.imageToColorPaletteController = controller;
     }

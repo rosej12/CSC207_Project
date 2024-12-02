@@ -1,8 +1,8 @@
 package use_case.render;
 
-import data_access.RenderDataAccessObject;
+import dataaccesses.RenderDataAccessObject;
 import org.junit.jupiter.api.Test;
-import use_cases.Render.*;
+import usecases.Render.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
