@@ -39,9 +39,9 @@ This drawing program includes the following features:
 
 ## APIs Used
 
-- Imagga API: https://imagga.com/
+- [Imagga API:](https://imagga.com/)
   - This is used to extract color palettes from images.
-- Clipdrop API: https://clipdrop.co/
+- [Clipdrop API:](https://clipdrop.co/)
   - This is used to convert sketches to images.
 
 
