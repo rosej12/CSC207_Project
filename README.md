@@ -1,4 +1,4 @@
-# CSC207_Project
+# InkFlow
 
 ## Summary
 
