@@ -24,10 +24,10 @@ public class AutoSaveView extends JPanel {
     private final String viewName = "autosave";
 
     private AutoSaveController autoSaveController;
-    private use_cases.StatusManagement.AutoSave.AutoSaveDataAccessInterface AutoSaveDataAccessInterface;
-    private AutoSaveOutputBoundary AutoSaveInputBoundary;
+    private AutoSaveViewModel viewModel;
 
     public AutoSaveView(AutoSaveViewModel viewModel) {
+        this.viewModel = viewModel;
 
     }
 
