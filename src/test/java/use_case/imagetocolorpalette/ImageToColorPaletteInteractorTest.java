@@ -1,17 +1,15 @@
 
 package use_case.imagetocolorpalette;
 
-import entities.Color;
 import entities.ColorPalette;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import use_cases.ColorPaletteRepositoryInterface;
-import use_cases.ImageToColorPalette.*;
+import usecases.ColorPaletteRepositoryInterface;
+import usecases.ImageToColorPalette.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

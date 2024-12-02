@@ -1,21 +1,27 @@
 package view;
 
-import entities.ColorPalette;
-import entities.Color;
-import interface_adapter.Drawing.DrawingController;
-import interface_adapter.GenerateRandomColor.GenerateRandomColorController;
-import interface_adapter.GenerateRandomColor.GenerateRandomColorPaletteViewModel;
-import interface_adapter.ViewManagerModel;
-
-import javax.swing.*;
-import javax.swing.text.View;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import entities.Color;
+import entities.ColorPalette;
+import interfaceadapters.GenerateRandomColor.GenerateRandomColorController;
+import interfaceadapters.GenerateRandomColor.GenerateRandomColorPaletteViewModel;
+import interfaceadapters.ViewManagerModel;
+
 public class GenerateRandomColorPaletteView extends JPanel implements ActionListener, PropertyChangeListener {
+    private static final int DIMENSIONALITY = 100;
     private final String viewName = "GenerateRandomColors";
     private final GenerateRandomColorPaletteViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
@@ -24,7 +30,8 @@ public class GenerateRandomColorPaletteView extends JPanel implements ActionList
     private GenerateRandomColorController generateRandomColorController;
     private JPanel colorPanel;
 
-    public GenerateRandomColorPaletteView(GenerateRandomColorPaletteViewModel viewModel, ViewManagerModel viewManagerModel) {
+    public GenerateRandomColorPaletteView(GenerateRandomColorPaletteViewModel viewModel,
+                                          ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.viewModel.addPropertyChangeListener(this);
@@ -36,9 +43,9 @@ public class GenerateRandomColorPaletteView extends JPanel implements ActionList
         buttonsPanel.add(backButton);
         buttonsPanel.add(generateButton);
 
-        generateButton.addActionListener(e -> generateRandomColorController.GenerateRandomColor());
+        generateButton.addActionListener(event -> generateRandomColorController.generateRandomColor());
 
-        backButton.addActionListener(e -> switchToGenerateRandomColorsView());
+        backButton.addActionListener(event -> switchToGenerateRandomColorsView());
 
         add(buttonsPanel, BorderLayout.NORTH);
 
@@ -46,6 +53,7 @@ public class GenerateRandomColorPaletteView extends JPanel implements ActionList
         colorPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         add(colorPanel, BorderLayout.CENTER);
     }
+
     private void switchToGenerateRandomColorsView() {
         viewManagerModel.setState("Drawing");
         viewManagerModel.firePropertyChanged();
@@ -55,7 +63,8 @@ public class GenerateRandomColorPaletteView extends JPanel implements ActionList
     public void propertyChange(PropertyChangeEvent evt) {
         if ("colorPalette".equals(evt.getPropertyName())) {
             displayColors(viewModel.getState().getColorPalette());
-        } else if ("error".equals(evt.getPropertyName())) {
+        }
+        else if ("error".equals(evt.getPropertyName())) {
             displayError(viewModel.getState().getErrorMessage());
         }
     }
@@ -68,20 +77,32 @@ public class GenerateRandomColorPaletteView extends JPanel implements ActionList
         colorPanel.removeAll();
 
         for (Color color : colorPalette.getColors()) {
-            JPanel colorContainer = new JPanel(new BorderLayout());
             JLabel label = new JLabel();
             label.setOpaque(true);
             label.setBackground(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
-            label.setPreferredSize(new Dimension(100, 100));
+            label.setPreferredSize(new Dimension(DIMENSIONALITY, DIMENSIONALITY));
 
-            JButton lockButton = new JButton(color.isLocked() ? "Unlock" : "Lock");
-            lockButton.addActionListener(e -> {
-                color.setLocked(!color.isLocked());
-                lockButton.setText(color.isLocked() ? "Unlock" : "Lock");
+            JButton lockButton = new JButton();
+            if (color.isLocked()) {
+                lockButton.setText("Unlock");
+            }
+            else {
+                lockButton.setText("Lock");
+            }
+
+            lockButton.addActionListener(event -> {
+                boolean isCurrentlyLocked = color.isLocked();
+                color.setLocked(!isCurrentlyLocked);
+                if (color.isLocked()) {
+                    lockButton.setText("Unlock");
+                }
+                else {
+                    lockButton.setText("Lock");
+                }
             });
 
             JButton pickColorButton = new JButton("Pick Color");
-            pickColorButton.addActionListener(e -> {
+            pickColorButton.addActionListener(event -> {
                 java.awt.Color newColor = JColorChooser.showDialog(null, "Choose a Color", label.getBackground());
                 if (newColor != null) {
                     color.setRed(newColor.getRed());
@@ -91,6 +112,7 @@ public class GenerateRandomColorPaletteView extends JPanel implements ActionList
                 }
             });
 
+            JPanel colorContainer = new JPanel(new BorderLayout());
             colorContainer.add(label, BorderLayout.CENTER);
             colorContainer.add(lockButton, BorderLayout.SOUTH);
             colorContainer.add(pickColorButton, BorderLayout.NORTH);
@@ -106,10 +128,20 @@ public class GenerateRandomColorPaletteView extends JPanel implements ActionList
 
     }
 
+    /**
+     * Retrieves the name of the view.
+     *
+     * @return The name of the view.
+     */
     public String getViewName() {
         return viewName;
     }
 
+    /**
+     * Sets the controller for generating random colors.
+     *
+     * @param generateRandomColorController The controller to handle generating random colors.
+     */
     public void setGenerateRandomColorController(GenerateRandomColorController generateRandomColorController) {
         this.generateRandomColorController = generateRandomColorController;
     }

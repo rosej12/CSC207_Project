@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapter.Render.RenderController;
-import interface_adapter.Render.RenderState;
-import interface_adapter.Render.RenderViewModel;
+import interfaceadapters.Render.RenderController;
+import interfaceadapters.Render.RenderState;
+import interfaceadapters.Render.RenderViewModel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

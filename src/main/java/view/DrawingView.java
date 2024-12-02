@@ -1,58 +1,64 @@
 package view;
 
-import entities.ColorPalette;
-import interface_adapter.Drawing.DrawingController;
-import interface_adapter.Drawing.DrawingState;
-import interface_adapter.Drawing.DrawingViewModel;
-import interface_adapter.ViewManagerModel;
-import use_cases.ColorPaletteRepositoryInterface;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.awt.image.RenderedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.RenderedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import entities.ColorPalette;
+import interfaceadapters.Drawing.DrawingController;
+import interfaceadapters.Drawing.DrawingState;
+import interfaceadapters.Drawing.DrawingViewModel;
+import interfaceadapters.ViewManagerModel;
+import usecases.ColorPaletteRepositoryInterface;
 
 public class DrawingView extends JPanel implements PropertyChangeListener {
 
-    private final String viewName = "Drawing";
     private final DrawingViewModel drawingViewModel;
     private DrawingController drawingController;
     private final ViewManagerModel viewManagerModel;
     private final ColorPaletteRepositoryInterface colorPaletteRepository;
 
-    private final JButton saveButton = new JButton("Save");
-    private final JButton clearButton = new JButton("Clear All");
-    private final JButton generateColorButton = new JButton("Generate Colors");
-    private final JButton imageToColorButton = new JButton("Generate Color from Image");
-    private final JButton toRenderButton = new JButton("To Render");
+    private final int initialSize = 1;
+    private final SpinnerNumberModel paintModel = new SpinnerNumberModel(initialSize, initialSize,
+            initialSize + 29, 1);
+    private final JSpinner paintSizeSpinner = new JSpinner(paintModel);
 
-    private final ButtonGroup toolButtonGroup = new ButtonGroup();
-    private final JRadioButton paintButton = new JRadioButton("Paint");
-    private final JRadioButton eraseButton = new JRadioButton("Erase");
+    private final SpinnerNumberModel eraseModel = new SpinnerNumberModel(initialSize, initialSize,
+            initialSize + 29, 1);
+    private final JSpinner eraseSizeSpinner = new JSpinner(eraseModel);
 
-    int initialSize = 1;
-    SpinnerNumberModel paintModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1 );
-    private final JSpinner paintSizeSpinner =  new JSpinner(paintModel);
-
-    SpinnerNumberModel eraseModel = new SpinnerNumberModel(initialSize, initialSize, initialSize + 29, 1 );
-    private final JSpinner eraseSizeSpinner =  new JSpinner(eraseModel);
-
-    private int prevX, prevY;
+    private int prevX;
+    private int prevY;
     private int drawSize = 1;
     private int eraseSize;
     private int paintSize;
 
     private Color currentColor = Color.BLACK;
-    private DrawingPanel drawingPanel;
+    private final DrawingPanel drawingPanel;
     private JButton[] colorButtons;
-    private JPanel buttonsPanel;
+    private final JPanel buttonsPanel;
 
     public DrawingView(DrawingViewModel drawingViewModel, ViewManagerModel viewManagerModel,
                        ColorPaletteRepositoryInterface colorPaletteRepository) {
@@ -70,17 +76,22 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         // Add other buttons to buttonsPanel
+        JButton saveButton = new JButton("Save");
         buttonsPanel.add(saveButton);
+        JButton clearButton = new JButton("Clear All");
         buttonsPanel.add(clearButton);
+        JButton toRenderButton = new JButton("To Render");
         buttonsPanel.add(toRenderButton);
+        JButton generateColorButton = new JButton("Generate Colors");
         buttonsPanel.add(generateColorButton);
+        JButton imageToColorButton = new JButton("Generate Color from Image");
         buttonsPanel.add(imageToColorButton);
 
         // Set up action listeners for buttons
-        saveButton.addActionListener(e -> saveDrawing());
-        clearButton.addActionListener(e -> clearDrawing());
-        generateColorButton.addActionListener(e -> switchToGenerateRandomColorsView());
-        imageToColorButton.addActionListener(e -> switchToImageToColorPaletteView());
+        saveButton.addActionListener(event -> saveDrawing());
+        clearButton.addActionListener(event -> clearDrawing());
+        generateColorButton.addActionListener(event -> switchToGenerateRandomColorsView());
+        imageToColorButton.addActionListener(event -> switchToImageToColorPaletteView());
         toRenderButton.addActionListener(evt -> switchToRenderView());
 
         // Initialize color palette buttons
@@ -89,17 +100,20 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         colorPaletteRepository.addPropertyChangeListener(this);
 
         // Top panel with tools
-        JPanel toolsPanel = new JPanel();
+        ButtonGroup toolButtonGroup = new ButtonGroup();
+        JRadioButton paintButton = new JRadioButton("Paint");
         toolButtonGroup.add(paintButton);
+        JRadioButton eraseButton = new JRadioButton("Erase");
         toolButtonGroup.add(eraseButton);
         paintButton.setSelected(true);
 
         // Paint Size Spinner
+        JPanel toolsPanel = new JPanel();
         JLabel pSize = new JLabel("Paint Size");
         toolsPanel.add(pSize);
         toolsPanel.add(paintSizeSpinner);
         paintSizeSpinner.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
+            public void stateChanged(ChangeEvent event) {
                 paintSize = (int) paintSizeSpinner.getValue();
                 drawSize = paintSize;
             }
@@ -114,7 +128,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         toolsPanel.add(eSize);
         toolsPanel.add(eraseSizeSpinner);
         eraseSizeSpinner.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
+            public void stateChanged(ChangeEvent event) {
                 eraseSize = (int) eraseSizeSpinner.getValue();
                 drawSize = eraseSize;
             }
@@ -123,8 +137,8 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         eraseButton.addActionListener(evt -> eraseTool());
         paintButton.addActionListener(evt -> paintTool());
 
-        paintButton.addActionListener(e -> currentColor = Color.BLACK);
-        eraseButton.addActionListener(e -> currentColor = Color.WHITE);
+        paintButton.addActionListener(event -> currentColor = Color.BLACK);
+        eraseButton.addActionListener(event -> currentColor = Color.WHITE);
 
         this.add(drawingPanel, BorderLayout.CENTER);
         this.add(buttonsPanel, BorderLayout.SOUTH);
@@ -186,10 +200,11 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
             for (int i = 0; i < paletteSize; i++) {
                 JButton colorButton = new JButton();
                 entities.Color colorEntity = colorPalette.getColor(i);
-                java.awt.Color awtColor = new java.awt.Color(colorEntity.getRed(), colorEntity.getGreen(), colorEntity.getBlue());
+                java.awt.Color awtColor = new java.awt.Color(colorEntity.getRed(), colorEntity.getGreen(),
+                        colorEntity.getBlue());
                 colorButton.setBackground(awtColor);
                 int index = i;
-                colorButton.addActionListener(e -> selectColor(index));
+                colorButton.addActionListener(event -> selectColor(index));
                 buttonsPanel.add(colorButton);
                 colorButtons[i] = colorButton;
             }
@@ -216,7 +231,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
         if (state.getError() != null) {
             JOptionPane.showMessageDialog(this, state.getError(), "Error", JOptionPane.ERROR_MESSAGE);
-            state.setError(null); // Reset error after displaying
+            state.setError(null);
         }
 
         if (state.getDrawing() == null) {
@@ -224,6 +239,11 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         }
     }
 
+    /**
+     * Sets the DrawingController for this view.
+     *
+     * @param controller the DrawingController to be associated with this view.
+     */
     public void setDrawingController(DrawingController controller) {
         this.drawingController = controller;
     }
@@ -233,11 +253,29 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         drawingController.switchToRenderView(panel.getImage());
     }
 
-    private class DrawingPanel extends JPanel {
+    /**
+     * Retrieves the current DrawingController instance associated with this view.
+     *
+     * @return the DrawingController instance controlling this view.
+     */
+    public DrawingController getDrawingController() {
+        return drawingController;
+    }
+
+    /**
+     * Gets the name of this view.
+     *
+     * @return a string representing the name of the view, which is "Drawing".
+     */
+    public String getViewName() {
+        return "Drawing";
+    }
+
+    private final class DrawingPanel extends JPanel {
         private Image image;
         private Graphics2D g2;
 
-        public DrawingPanel() {
+        private DrawingPanel() {
             setDoubleBuffered(false);
             addMouseListener(new MouseAdapter() {
                 @Override
@@ -294,13 +332,5 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         public Image getImage() {
             return image;
         }
-    }
-
-    public DrawingController getDrawingController(){
-        return drawingController;
-    }
-
-    public String getViewName() {
-        return viewName;
     }
 }

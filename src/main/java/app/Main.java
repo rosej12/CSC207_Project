@@ -1,9 +1,9 @@
 package app;
 
-import data_access.RenderDataAccessObject;
-import data_access.DrawingFileDataAccess;
-import use_cases.Drawing.DrawingDataAccessInterface;
-import use_cases.Render.RenderDataAccessInterface;
+import dataaccesses.RenderDataAccessObject;
+import dataaccesses.DrawingFileDataAccess;
+import usecases.Drawing.DrawingDataAccessInterface;
+import usecases.Render.RenderDataAccessInterface;
 
 public class Main {
 
