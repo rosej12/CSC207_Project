@@ -13,17 +13,16 @@ import java.io.File;
 import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
 
 public class StatusController {
-    private final AutoSaveInputBoundary autoSaveInteractor;
-    private final UndoRedoInteractor undoInteractor;
+    private final AutoSaveInputBoundary autosaveUseCase;
 
-    public StatusController(AutoSaveInputBoundary autoSaveInteractor) {
-        this.autoSaveInteractor = autoSaveInteractor;
-        this.undoInteractor = new UndoRedoInteractor();
+    public StatusController(AutoSaveInputBoundary autosaveUseCase) {
+        this.autosaveUseCase = autosaveUseCase;
     }
 
-    public void saveToFile(RenderedImage image, File file) {
-        autoSaveInteractor.saveToFile(image, file);
+    /**
+     * Initiates the autosave process by calling the use case.
+     */
+    public void autosave(RenderedImage currentState) {
+        autosaveUseCase.saveCanvasState(currentState);
     }
-
-
 }
