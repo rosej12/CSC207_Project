@@ -8,6 +8,7 @@ import data_access.RenderDataAccessObject;
 import use_cases.Drawing.DrawingDataAccessInterface;
 import use_cases.Render.RenderDataAccessInterface;
 import use_cases.Render.RenderDataAccessInterface;
+import use_cases.StatusManagement.AutoSave.AutoSaveDataAccessInterface;
 
 public class Main {
 
@@ -31,8 +32,12 @@ public class Main {
                 .addImageToColorPaletteView()       // Adds the ImageToColorPalette View
                 .addRenderView()                    // Adds the Render View
                 .addDrawingUseCase()                // Sets up the Drawing Use Case
+                .addAutoSaveView()
+                .addUndoRedoView()
                 .addImageToColorPaletteUseCase()    // Sets up the ImageToColorPalette Use Case
                 .addRenderUseCase()                 // Sets up the Render Use Case
+                .addAutoSaveUseCase()
+                .addUndoRedoUseCase()
                 .build()                            // Builds the application
                 .setVisible(true);                  // Makes the application window visible
     }

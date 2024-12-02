@@ -1,29 +1,25 @@
 package interface_adapter.StatusManagement.UndoRedo;
 
-import use_cases.StatusManagement.AutoSave.AutoSaveOutputBoundary;
+import interface_adapter.Drawing.DrawingViewModel;
+import interface_adapter.Render.RenderViewModel;
+import interface_adapter.ViewManagerModel;
+import use_cases.StatusManagement.UndoRedo.UndoRedoInteractor;
+import view.DrawingView.DrawingPanel;
+import use_cases.StatusManagement.UndoRedo.UndoRedoOutputBoundary;
+import view.DrawingView;
 
 import java.awt.image.RenderedImage;
 
-public class UndoRedoPresenter implements AutoSaveOutputBoundary {
+public class UndoRedoPresenter implements UndoRedoOutputBoundary {
     private UndoRedoViewModel viewModel;
+    private final DrawingViewModel drawingViewModel;
+    private final ViewManagerModel viewManagerModel;
 
-    public UndoRedoPresenter(UndoRedoViewModel viewModel) {
+    public UndoRedoPresenter(UndoRedoViewModel viewModel, DrawingViewModel drawingViewModel,
+                             ViewManagerModel viewManagerModel) {
         this.viewModel = new UndoRedoViewModel();
-    }
-
-    @Override
-    public void prepareSuccessView(RenderedImage drawing) {
-        viewModel.getState().setStatus("Success");
-        viewModel.getState().setState(drawing);
-        viewModel.getState().setError(null);
-        viewModel.firePropertyChanged();
-    }
-
-    @Override
-    public void prepareFailView(String errorMessage) {
-        viewModel.getState().setStatus("Unsuccessful");
-        viewModel.getState().setError(errorMessage);
-        viewModel.firePropertyChanged();
+        this.drawingViewModel = new DrawingViewModel();
+        this.viewManagerModel = new ViewManagerModel();
     }
 
     /**
@@ -31,5 +27,16 @@ public class UndoRedoPresenter implements AutoSaveOutputBoundary {
      */
     public UndoRedoViewModel getViewModel() {
         return viewModel;
+    }
+
+
+    @Override
+    public DrawingPanel getUndoAction() {
+        return UndoRedoInteractor.getUndoStack().pop();
+    }
+
+    @Override
+    public DrawingPanel getRedoAction() {
+        return UndoRedoInteractor.getRedoStack().pop();
     }
 }

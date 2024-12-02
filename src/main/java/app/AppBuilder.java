@@ -6,23 +6,32 @@ import interface_adapter.Drawing.*;
 import interface_adapter.Render.RenderController;
 import interface_adapter.Render.RenderPresenter;
 import interface_adapter.Render.RenderViewModel;
+import interface_adapter.StatusManagement.AutoSave.AutoSaveController;
+import interface_adapter.StatusManagement.AutoSave.AutoSavePresenter;
+import interface_adapter.StatusManagement.AutoSave.AutoSaveViewModel;
+import interface_adapter.StatusManagement.UndoRedo.UndoRedoController;
+import interface_adapter.StatusManagement.UndoRedo.UndoRedoPresenter;
+import interface_adapter.StatusManagement.UndoRedo.UndoRedoViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
-import interface_adapter.ViewManagerModel;
 import use_cases.Drawing.*;
 import use_cases.Render.RenderDataAccessInterface;
 import use_cases.Render.RenderInputBoundary;
 import use_cases.Render.RenderInteractor;
 import use_cases.Render.RenderOutputBoundary;
 import use_cases.ImageToColorPalette.*;
-import view.DrawingView;
-import view.RenderView;
-import view.ViewManager;
-import view.ImageToColorPaletteView;
+import use_cases.StatusManagement.AutoSave.AutoSaveDataAccessInterface;
+import use_cases.StatusManagement.AutoSave.AutoSaveInputBoundary;
+import use_cases.StatusManagement.AutoSave.AutoSaveInteractor;
+import use_cases.StatusManagement.AutoSave.AutoSaveOutputBoundary;
+import use_cases.StatusManagement.UndoRedo.UndoRedoDataAccessInterface;
+import use_cases.StatusManagement.UndoRedo.UndoRedoInputBoundary;
+import use_cases.StatusManagement.UndoRedo.UndoRedoInteractor;
+import use_cases.StatusManagement.UndoRedo.UndoRedoOutputBoundary;
+import view.*;
 import view.ViewManager;
 import interface_adapter.ImageToColorPalette.*;
 
-import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
 
@@ -43,6 +52,13 @@ public class AppBuilder {
     private RenderViewModel renderViewModel;
     private RenderDataAccessInterface renderDAO;
 
+    private UndoRedoView undoRedoView;
+    private AutoSaveView autoSaveView;
+    private AutoSaveViewModel autoSaveViewModel;
+    private UndoRedoViewModel undoRedoViewModel;
+    private AutoSaveDataAccessInterface autoSaveDAO;
+    private UndoRedoDataAccessInterface undoRedoDAO;
+
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         colorPaletteRepository = new InMemoryColorPaletteRepository();
@@ -55,6 +71,16 @@ public class AppBuilder {
 
     public AppBuilder addRenderDAO(RenderDataAccessInterface renderDataAccess) {
         this.renderDAO = renderDataAccess;
+        return this;
+    }
+
+    public AppBuilder addAutosaveDAO(AutoSaveDataAccessInterface autoSaveDataAccess) {
+        this.autoSaveDAO = autoSaveDataAccess;
+        return this;
+    }
+
+    public AppBuilder addUndoRedoDAO(UndoRedoDataAccessInterface undoRedoDataAccess) {
+        this.undoRedoDAO = undoRedoDataAccess;
         return this;
     }
 
@@ -88,6 +114,24 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the AutoSave View to the application
+     * @return this builder
+     */
+    public AppBuilder addAutoSaveView() {
+        autoSaveViewModel = new AutoSaveViewModel();
+        autoSaveView = new AutoSaveView(autoSaveViewModel);
+        cardPanel.add(autoSaveView, autoSaveView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addUndoRedoView(){
+        undoRedoViewModel = new UndoRedoViewModel();
+        undoRedoView = new UndoRedoView(undoRedoViewModel);
+        cardPanel.add(undoRedoView,undoRedoView.getViewName());
+        return this;
+    }
+
+    /**
      * Adds the Drawing Use Case to the application.
      * @return this builder
      */
@@ -110,6 +154,28 @@ public class AppBuilder {
         final RenderInputBoundary renderInteractor = new RenderInteractor(renderDAO, renderOutputBoundary);
         final RenderController renderController = new RenderController(renderInteractor);
         renderView.setRenderController(renderController);
+        return this;
+    }
+
+    /**
+     * Adds the AutoSave Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addAutoSaveUseCase() {
+        final AutoSaveOutputBoundary autoSaveOutputBoundary = new AutoSavePresenter(autoSaveViewModel,
+                viewManagerModel, drawingViewModel);
+        final AutoSaveInputBoundary autoSaveInteractor = new AutoSaveInteractor(autoSaveDAO, autoSaveOutputBoundary);
+        final AutoSaveController autoSaveController = new AutoSaveController(autoSaveInteractor);
+        autoSaveView.setAutoSaveController(autoSaveController);
+        return this;
+    }
+
+    public AppBuilder addUndoRedoUseCase() {
+        final UndoRedoOutputBoundary undoRedoOutputBoundary = new UndoRedoPresenter(undoRedoViewModel,
+                drawingViewModel,viewManagerModel);
+        final UndoRedoInputBoundary undoRedoInteractor = new UndoRedoInteractor();
+        final UndoRedoController undoRedoController = new UndoRedoController(undoRedoInteractor);
+        undoRedoView.setUndoRedoController(undoRedoController);
         return this;
     }
 
