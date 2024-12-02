@@ -5,15 +5,12 @@ import interface_adapter.Drawing.DrawingController;
 import interface_adapter.Drawing.DrawingState;
 import interface_adapter.Drawing.DrawingViewModel;
 import interface_adapter.ViewManagerModel;
-import use_cases.ImageToColorPalette.ColorPaletteRepositoryInterface;
+import use_cases.ColorPaletteRepositoryInterface;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -21,7 +18,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
-import java.util.Random;
 
 public class DrawingView extends JPanel implements PropertyChangeListener {
 
@@ -83,7 +79,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         // Set up action listeners for buttons
         saveButton.addActionListener(e -> saveDrawing());
         clearButton.addActionListener(e -> clearDrawing());
-        generateColorButton.addActionListener(e -> generateRandomColors());
+        generateColorButton.addActionListener(e -> switchToGenerateRandomColorsView());
         imageToColorButton.addActionListener(e -> switchToImageToColorPaletteView());
         toRenderButton.addActionListener(evt -> switchToRenderView());
 
@@ -141,9 +137,10 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         viewManagerModel.firePropertyChanged();
     }
 
-    // Placeholder method for generating random colors
-    private void generateRandomColors() {
-        // Implement your color generation logic here
+    // Method to switch to generating random colors
+    private void switchToGenerateRandomColorsView() {
+        viewManagerModel.setState("GenerateRandomColors");
+        viewManagerModel.firePropertyChanged();
     }
 
     private void eraseTool() {

@@ -3,26 +3,32 @@ package app;
 import data_access.InMemoryColorPaletteRepository;
 import frameworks_and_drivers.ImageToColorPaletteAPI;
 import interface_adapter.Drawing.*;
+import interface_adapter.GenerateRandomColor.GenerateRandomColorPaletteViewModel;
 import interface_adapter.Render.RenderController;
 import interface_adapter.Render.RenderPresenter;
 import interface_adapter.Render.RenderViewModel;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
-import interface_adapter.ViewManagerModel;
-import use_cases.Drawing.*;
+import use_cases.ColorPaletteRepositoryInterface;
 import use_cases.Render.RenderDataAccessInterface;
 import use_cases.Render.RenderInputBoundary;
 import use_cases.Render.RenderInteractor;
 import use_cases.Render.RenderOutputBoundary;
 import use_cases.ImageToColorPalette.*;
-import view.DrawingView;
-import view.RenderView;
-import view.ViewManager;
-import view.ImageToColorPaletteView;
+import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteInputBoundary;
+import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteInteractor;
+import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteOutputBoundary;
+//import use_cases.GenerateRandomColorPalette.ColorPaletteRepositoryInterface;
+import use_cases.Drawing.DrawingDataAccessInterface;
+import use_cases.Drawing.DrawingInputBoundary;
+import use_cases.Drawing.DrawingInteractor;
+import use_cases.Drawing.DrawingOutputBoundary;
+import view.*;
 import view.ViewManager;
 import interface_adapter.ImageToColorPalette.*;
+import view.GenerateRandomColorPaletteView;
+import interface_adapter.GenerateRandomColor.*;
 
-import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
 
@@ -37,6 +43,8 @@ public class AppBuilder {
     private DrawingDataAccessInterface drawingDAO;
     private ImageToColorPaletteView imageToColorPaletteView;
     private ImageToColorPaletteViewModel imageToColorPaletteViewModel;
+    private GenerateRandomColorPaletteView generateRandomColorPaletteView;
+    private GenerateRandomColorPaletteViewModel generateRandomColorPaletteViewModel;
     private ColorPaletteRepositoryInterface colorPaletteRepository;
 
     private RenderView renderView;
@@ -73,6 +81,13 @@ public class AppBuilder {
         imageToColorPaletteViewModel = new ImageToColorPaletteViewModel();
         imageToColorPaletteView = new ImageToColorPaletteView(imageToColorPaletteViewModel, viewManagerModel);
         cardPanel.add(imageToColorPaletteView, imageToColorPaletteView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addGenerateRandomColorPaletteView() {
+        generateRandomColorPaletteViewModel = new GenerateRandomColorPaletteViewModel();
+        generateRandomColorPaletteView = new GenerateRandomColorPaletteView(generateRandomColorPaletteViewModel, viewManagerModel);
+        cardPanel.add(generateRandomColorPaletteView, generateRandomColorPaletteView.getViewName());
         return this;
     }
 
@@ -126,6 +141,20 @@ public class AppBuilder {
         final ImageToColorPaletteController imageToColorPaletteController =
                 new ImageToColorPaletteController(imageToColorPaletteInteractor);
         imageToColorPaletteView.setImageToColorPaletteController(imageToColorPaletteController);
+        return this;
+    }
+
+    public AppBuilder addGenerateRandomColorPaletteUseCase() {
+        final GenerateRandomColorPaletteOutputBoundary generateRandomColorPaletteOutputBoundary =
+                new GenerateRandomColorPalettePresenter(generateRandomColorPaletteViewModel);
+
+        final GenerateRandomColorPaletteInputBoundary generateRandomColorPaletteInteractor =
+                new GenerateRandomColorPaletteInteractor(generateRandomColorPaletteOutputBoundary, colorPaletteRepository);
+
+        final GenerateRandomColorController generateRandomColorController =
+                new GenerateRandomColorController(generateRandomColorPaletteInteractor);
+
+        generateRandomColorPaletteView.setGenerateRandomColorController(generateRandomColorController);
         return this;
     }
 

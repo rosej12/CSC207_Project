@@ -1,7 +1,7 @@
 package data_access;
 
 import entities.ColorPalette;
-import use_cases.ImageToColorPalette.ColorPaletteRepositoryInterface;
+import use_cases.ColorPaletteRepositoryInterface;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

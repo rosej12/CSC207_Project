@@ -29,9 +29,11 @@ public class Main {
                 .addRenderDAO(renderDataAccess)     // Injects the data access object
                 .addDrawingView()                   // Adds the Drawing View
                 .addImageToColorPaletteView()       // Adds the ImageToColorPalette View
+                .addGenerateRandomColorPaletteView()
                 .addRenderView()                    // Adds the Render View
                 .addDrawingUseCase()                // Sets up the Drawing Use Case
                 .addImageToColorPaletteUseCase()    // Sets up the ImageToColorPalette Use Case
+                .addGenerateRandomColorPaletteUseCase()
                 .addRenderUseCase()                 // Sets up the Render Use Case
                 .build()                            // Builds the application
                 .setVisible(true);                  // Makes the application window visible
