@@ -3,7 +3,7 @@ package use_case.GenerateRandomColorPalette;
 import data_access.InMemoryColorPaletteRepository;
 import entities.Color;
 import entities.ColorPalette;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteInteractor;
 import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteOutputBoundary;
 import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteResponseModel;
@@ -11,7 +11,7 @@ import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteResponseMo
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RandomColorPaletteInteractorTest {
 

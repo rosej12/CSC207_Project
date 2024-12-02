@@ -1,68 +1,104 @@
 package app;
 
+import java.awt.CardLayout;
+import java.awt.Color;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
+import data_access.ImageToColorPaletteAPI;
 import data_access.InMemoryColorPaletteRepository;
-import frameworks_and_drivers.ImageToColorPaletteAPI;
-import interface_adapter.Drawing.*;
+import interface_adapter.Drawing.DrawingController;
+import interface_adapter.Drawing.DrawingPresenter;
+import interface_adapter.Drawing.DrawingViewModel;
+import interface_adapter.GenerateRandomColor.GenerateRandomColorController;
+import interface_adapter.GenerateRandomColor.GenerateRandomColorPalettePresenter;
 import interface_adapter.GenerateRandomColor.GenerateRandomColorPaletteViewModel;
+import interface_adapter.ImageToColorPalette.ImageToColorPaletteController;
+import interface_adapter.ImageToColorPalette.ImageToColorPalettePresenter;
+import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
 import interface_adapter.Render.RenderController;
 import interface_adapter.Render.RenderPresenter;
 import interface_adapter.Render.RenderViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
 import use_cases.ColorPaletteRepositoryInterface;
-import use_cases.Render.RenderDataAccessInterface;
-import use_cases.Render.RenderInputBoundary;
-import use_cases.Render.RenderInteractor;
-import use_cases.Render.RenderOutputBoundary;
-import use_cases.ImageToColorPalette.*;
-import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteInputBoundary;
-import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteInteractor;
-import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteOutputBoundary;
-//import use_cases.GenerateRandomColorPalette.ColorPaletteRepositoryInterface;
 import use_cases.Drawing.DrawingDataAccessInterface;
 import use_cases.Drawing.DrawingInputBoundary;
 import use_cases.Drawing.DrawingInteractor;
 import use_cases.Drawing.DrawingOutputBoundary;
-import view.*;
-import view.ViewManager;
-import interface_adapter.ImageToColorPalette.*;
+import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteInputBoundary;
+import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteInteractor;
+import use_cases.GenerateRandomColorPalette.GenerateRandomColorPaletteOutputBoundary;
+import use_cases.ImageToColorPalette.ImageToColorPaletteDataAccessInterface;
+import use_cases.ImageToColorPalette.ImageToColorPaletteInputBoundary;
+import use_cases.ImageToColorPalette.ImageToColorPaletteInteractor;
+import use_cases.ImageToColorPalette.ImageToColorPaletteOutputBoundary;
+import use_cases.Render.RenderDataAccessInterface;
+import use_cases.Render.RenderInputBoundary;
+import use_cases.Render.RenderInteractor;
+import use_cases.Render.RenderOutputBoundary;
+import view.DrawingView;
 import view.GenerateRandomColorPaletteView;
-import interface_adapter.GenerateRandomColor.*;
-
-import javax.swing.*;
-import java.awt.*;
+import view.ImageToColorPaletteView;
+import view.RenderView;
+import view.ViewManager;
 
 public class AppBuilder {
+    private static final int WINDOW_WIDTH = 1000;
+    private static final int WINDOW_HEIGHT = 800;
+
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
+    private final ColorPaletteRepositoryInterface colorPaletteRepository;
 
     private DrawingView drawingView;
     private DrawingViewModel drawingViewModel;
-    private DrawingDataAccessInterface drawingDAO;
+    private DrawingDataAccessInterface drawingdao;
     private ImageToColorPaletteView imageToColorPaletteView;
     private ImageToColorPaletteViewModel imageToColorPaletteViewModel;
     private GenerateRandomColorPaletteView generateRandomColorPaletteView;
     private GenerateRandomColorPaletteViewModel generateRandomColorPaletteViewModel;
-    private ColorPaletteRepositoryInterface colorPaletteRepository;
 
     private RenderView renderView;
     private RenderViewModel renderViewModel;
-    private RenderDataAccessInterface renderDAO;
+    private RenderDataAccessInterface renderDao;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         colorPaletteRepository = new InMemoryColorPaletteRepository();
     }
 
-    public AppBuilder addDAO(DrawingDataAccessInterface drawingDataAccess) {
-        this.drawingDAO = drawingDataAccess;
+    /**
+     * Adds a Drawing Data Access Object (DAO) to the application builder.
+     *
+     * <p>
+     * This method sets up the {@link DrawingDataAccessInterface} to handle data storage and retrieval for drawings.
+     * </p>
+     *
+     * @param drawingDataAccess the implementation of {@link DrawingDataAccessInterface}
+     *                          used for saving and retrieving drawings.
+     * @return the current instance of {@link AppBuilder}.
+     */
+    public AppBuilder addDao(DrawingDataAccessInterface drawingDataAccess) {
+        this.drawingdao = drawingDataAccess;
         return this;
     }
 
-    public AppBuilder addRenderDAO(RenderDataAccessInterface renderDataAccess) {
-        this.renderDAO = renderDataAccess;
+    /**
+     * Adds a Render Data Access Object (DAO) to the application builder.
+     *
+     * <p>
+     * This method sets up the {@link RenderDataAccessInterface} to handle rendering operations.
+     * </p>
+     *
+     * @param renderDataAccess the implementation of {@link RenderDataAccessInterface} used for rendering operations.
+     * @return the current instance of {@link AppBuilder}.
+     */
+    public AppBuilder addRenderDao(RenderDataAccessInterface renderDataAccess) {
+        this.renderDao = renderDataAccess;
         return this;
     }
 
@@ -77,6 +113,16 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the Image to Color Palette View to the application.
+     *
+     * <p>
+     * This method initializes the {@link ImageToColorPaletteViewModel} and {@link ImageToColorPaletteView},
+     * then adds the view to the card panel for state-based navigation.
+     * </p>
+     *
+     * @return the current instance of {@link AppBuilder}.
+     */
     public AppBuilder addImageToColorPaletteView() {
         imageToColorPaletteViewModel = new ImageToColorPaletteViewModel();
         imageToColorPaletteView = new ImageToColorPaletteView(imageToColorPaletteViewModel, viewManagerModel);
@@ -84,16 +130,34 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the Generate Random Color Palette View to the application.
+     *
+     * <p>
+     * This method initializes the {@link GenerateRandomColorPaletteViewModel} and
+     * {@link GenerateRandomColorPaletteView},
+     * then adds the view to the card panel for state-based navigation.
+     * </p>
+     *
+     * @return the current instance of {@link AppBuilder}.
+     */
     public AppBuilder addGenerateRandomColorPaletteView() {
         generateRandomColorPaletteViewModel = new GenerateRandomColorPaletteViewModel();
-        generateRandomColorPaletteView = new GenerateRandomColorPaletteView(generateRandomColorPaletteViewModel, viewManagerModel);
+        generateRandomColorPaletteView = new GenerateRandomColorPaletteView(generateRandomColorPaletteViewModel,
+                viewManagerModel);
         cardPanel.add(generateRandomColorPaletteView, generateRandomColorPaletteView.getViewName());
         return this;
     }
 
     /**
-     * Adds the Render View to the application
-     * @return this builder
+     * Adds the Render View to the application.
+     *
+     * <p>
+     * This method initializes the {@link RenderViewModel} and {@link RenderView},
+     * then adds the view to the card panel for state-based navigation.
+     * </p>
+     *
+     * @return the current instance of {@link AppBuilder}.
      */
     public AppBuilder addRenderView() {
         renderViewModel = new RenderViewModel();
@@ -109,7 +173,7 @@ public class AppBuilder {
     public AppBuilder addDrawingUseCase() {
         final DrawingOutputBoundary drawingOutputBoundary = new DrawingPresenter(viewManagerModel,
                 drawingViewModel, renderViewModel);
-        final DrawingInputBoundary drawingInteractor = new DrawingInteractor(drawingDAO, drawingOutputBoundary);
+        final DrawingInputBoundary drawingInteractor = new DrawingInteractor(drawingdao, drawingOutputBoundary);
         final DrawingController drawingController = new DrawingController(drawingInteractor);
         drawingView.setDrawingController(drawingController);
         return this;
@@ -122,12 +186,28 @@ public class AppBuilder {
     public AppBuilder addRenderUseCase() {
         final RenderOutputBoundary renderOutputBoundary = new RenderPresenter(viewManagerModel,
                 renderViewModel, drawingViewModel);
-        final RenderInputBoundary renderInteractor = new RenderInteractor(renderDAO, renderOutputBoundary);
+        final RenderInputBoundary renderInteractor = new RenderInteractor(renderDao, renderOutputBoundary);
         final RenderController renderController = new RenderController(renderInteractor);
         renderView.setRenderController(renderController);
         return this;
     }
 
+    /**
+     * Configures and adds the Image to Color Palette use case to the application.
+     *
+     * <p>
+     * This method initializes the necessary components, including:
+     * <ul>
+     * <li>{@link ImageToColorPalettePresenter} for presenting the output.</li>
+     * <li>{@link ImageToColorPaletteAPI} as the data access implementation.</li>
+     * <li>{@link ImageToColorPaletteInteractor} as the input boundary.</li>
+     * <li>{@link ImageToColorPaletteController} as the controller.</li>
+     * </ul>
+     * The controller is then set for the {@link ImageToColorPaletteView}.
+     * </p>
+     *
+     * @return the current instance of {@link AppBuilder}.
+     */
     public AppBuilder addImageToColorPaletteUseCase() {
         final ImageToColorPaletteOutputBoundary imageToColorPaletteOutputBoundary =
                 new ImageToColorPalettePresenter(imageToColorPaletteViewModel);
@@ -137,19 +217,36 @@ public class AppBuilder {
                 new ImageToColorPaletteAPI("acc_054cca57db5a48e", "6721441a35c051ac95446e1cc94cc6a4");
 
         final ImageToColorPaletteInputBoundary imageToColorPaletteInteractor =
-                new ImageToColorPaletteInteractor(dataAccess, imageToColorPaletteOutputBoundary, colorPaletteRepository);
+                new ImageToColorPaletteInteractor(dataAccess, imageToColorPaletteOutputBoundary,
+                        colorPaletteRepository);
         final ImageToColorPaletteController imageToColorPaletteController =
                 new ImageToColorPaletteController(imageToColorPaletteInteractor);
         imageToColorPaletteView.setImageToColorPaletteController(imageToColorPaletteController);
         return this;
     }
 
+    /**
+     * Configures and adds the Generate Random Color Palette use case to the application.
+     *
+     * <p>
+     * This method initializes the necessary components, including:
+     * <ul>
+     * <li>{@link GenerateRandomColorPalettePresenter} for presenting the output.</li>
+     * <li>{@link GenerateRandomColorPaletteInteractor} as the input boundary.</li>
+     * <li>{@link GenerateRandomColorController} as the controller.</li>
+     * </ul>
+     * The controller is then set for the {@link GenerateRandomColorPaletteView}.
+     * </p>
+     *
+     * @return the current instance of {@link AppBuilder}.
+     */
     public AppBuilder addGenerateRandomColorPaletteUseCase() {
         final GenerateRandomColorPaletteOutputBoundary generateRandomColorPaletteOutputBoundary =
                 new GenerateRandomColorPalettePresenter(generateRandomColorPaletteViewModel);
 
         final GenerateRandomColorPaletteInputBoundary generateRandomColorPaletteInteractor =
-                new GenerateRandomColorPaletteInteractor(generateRandomColorPaletteOutputBoundary, colorPaletteRepository);
+                new GenerateRandomColorPaletteInteractor(generateRandomColorPaletteOutputBoundary,
+                        colorPaletteRepository);
 
         final GenerateRandomColorController generateRandomColorController =
                 new GenerateRandomColorController(generateRandomColorPaletteInteractor);
@@ -165,7 +262,7 @@ public class AppBuilder {
     public JFrame build() {
         final JFrame application = new JFrame("Drawing Board");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        application.setSize(1000, 800);
+        application.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         application.setBackground(Color.WHITE);
         application.setLocationRelativeTo(null);
         application.add(cardPanel);

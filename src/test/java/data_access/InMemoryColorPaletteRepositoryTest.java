@@ -4,7 +4,6 @@ import entities.Color;
 import entities.ColorPalette;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import use_cases.ImageToColorPalette.ColorPaletteRepositoryInterface;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

@@ -1,6 +1,5 @@
-// File: src/test/java/use_cases/ImageToColorPaletteInteractorTest.java
 
-package use_cases.ImageToColorPalette;
+package use_case.imagetocolorpalette;
 
 import entities.Color;
 import entities.ColorPalette;
@@ -8,10 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import use_cases.ColorPaletteRepositoryInterface;
-import use_cases.ImageToColorPalette.ImageToColorPaletteDataAccessInterface;
-import use_cases.ImageToColorPalette.ImageToColorPaletteInputBoundary;
-import use_cases.ImageToColorPalette.ImageToColorPaletteOutputBoundary;
-import use_cases.ImageToColorPalette.ImageToColorPaletteResponseModel;
+import use_cases.ImageToColorPalette.*;
 
 import java.io.File;
 import java.io.IOException;
