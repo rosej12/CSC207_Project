@@ -23,12 +23,8 @@ public class RenderInteractor implements RenderInputBoundary {
         } else {
             Image renderedImage = renderDataAccessObject.getRender(
                     renderInputData.getDescription(), renderInputData.getSketch());
-            if (renderedImage == null) {
-                renderPresenter.prepareFailView("Error Generating Image.");
-            } else {
-                final RenderOutputData renderOutputData = new RenderOutputData(renderedImage);
-                renderPresenter.prepareSuccessView(renderOutputData);
-            }
+            final RenderOutputData renderOutputData = new RenderOutputData(renderedImage);
+            renderPresenter.prepareSuccessView(renderOutputData);
         }
     }
 

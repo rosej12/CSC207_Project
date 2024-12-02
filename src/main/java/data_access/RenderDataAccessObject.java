@@ -29,6 +29,10 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
         byte[] bytes = getRenderedImageAsBytes(description);
         Image image = bytesToImage(bytes);
 
+        if (image == null) {
+            image = getBlankImage(processedSketch.getWidth(null), processedSketch.getHeight(null));
+        }
+
         // Save Render
         saveImage(image, outputPath);
 
@@ -190,6 +194,15 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private Image getBlankImage(int width, int height) {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = image.createGraphics();
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, image.getWidth(), image.getHeight());
+        g.dispose();
+        return image;
     }
 
 }
