@@ -3,15 +3,26 @@ package app;
 import data_access.InMemoryColorPaletteRepository;
 import frameworks_and_drivers.ImageToColorPaletteAPI;
 import interface_adapter.Drawing.*;
+import interface_adapter.Render.RenderController;
+import interface_adapter.Render.RenderPresenter;
+import interface_adapter.Render.RenderViewModel;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
 import interface_adapter.ViewManagerModel;
 import use_cases.Drawing.*;
+import use_cases.Render.RenderDataAccessInterface;
+import use_cases.Render.RenderInputBoundary;
+import use_cases.Render.RenderInteractor;
+import use_cases.Render.RenderOutputBoundary;
 import use_cases.ImageToColorPalette.*;
 import view.DrawingView;
+import view.RenderView;
+import view.ViewManager;
 import view.ImageToColorPaletteView;
 import view.ViewManager;
 import interface_adapter.ImageToColorPalette.*;
 
+import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
 
@@ -28,6 +39,10 @@ public class AppBuilder {
     private ImageToColorPaletteViewModel imageToColorPaletteViewModel;
     private ColorPaletteRepositoryInterface colorPaletteRepository;
 
+    private RenderView renderView;
+    private RenderViewModel renderViewModel;
+    private RenderDataAccessInterface renderDAO;
+
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         colorPaletteRepository = new InMemoryColorPaletteRepository();
@@ -38,6 +53,15 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addRenderDAO(RenderDataAccessInterface renderDataAccess) {
+        this.renderDAO = renderDataAccess;
+        return this;
+    }
+
+    /**
+     * Adds the Drawing View to the application.
+     * @return this builder
+     */
     public AppBuilder addDrawingView() {
         drawingViewModel = new DrawingViewModel();
         drawingView = new DrawingView(drawingViewModel, viewManagerModel, colorPaletteRepository);
@@ -52,11 +76,40 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the Render View to the application
+     * @return this builder
+     */
+    public AppBuilder addRenderView() {
+        renderViewModel = new RenderViewModel();
+        renderView = new RenderView(renderViewModel);
+        cardPanel.add(renderView, renderView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Drawing Use Case to the application.
+     * @return this builder
+     */
     public AppBuilder addDrawingUseCase() {
-        final DrawingOutputBoundary drawingOutputBoundary = new DrawingPresenter(drawingViewModel);
+        final DrawingOutputBoundary drawingOutputBoundary = new DrawingPresenter(viewManagerModel,
+                drawingViewModel, renderViewModel);
         final DrawingInputBoundary drawingInteractor = new DrawingInteractor(drawingDAO, drawingOutputBoundary);
         final DrawingController drawingController = new DrawingController(drawingInteractor);
         drawingView.setDrawingController(drawingController);
+        return this;
+    }
+
+    /**
+     * Adds the Render Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addRenderUseCase() {
+        final RenderOutputBoundary renderOutputBoundary = new RenderPresenter(viewManagerModel,
+                renderViewModel, drawingViewModel);
+        final RenderInputBoundary renderInteractor = new RenderInteractor(renderDAO, renderOutputBoundary);
+        final RenderController renderController = new RenderController(renderInteractor);
+        renderView.setRenderController(renderController);
         return this;
     }
 
@@ -76,6 +129,10 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Creates the JFrame for the application and sets the initial view to be displayed.
+     * @return the application
+     */
     public JFrame build() {
         final JFrame application = new JFrame("Drawing Board");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
