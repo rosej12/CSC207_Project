@@ -6,5 +6,5 @@ import java.io.File;
 import java.io.IOException;
 
 public interface AutoSaveDataAccessInterface {
-    void saveDrawing(Graphics2D g2, File file) throws IOException;
+    void saveDrawing(RenderedImage g2,String extention, File file) throws IOException;
 }

@@ -15,7 +15,7 @@ public class AutoSaveInteractor implements AutoSaveInputBoundary {
     private final AutoSaveOutputBoundary outputBoundary;
     private Boolean lastFastSaved = false;
 
-    File tempDirectory = new File(System.getProperty("user.dir"), "inkflow");
+    public File tempDirectory = new File(System.getProperty("user.dir"), "inkflow");
 
     public AutoSaveInteractor(AutoSaveDataAccessInterface dataAccess, AutoSaveOutputBoundary outputBoundary) {
         this.dataAccess = dataAccess;
@@ -27,13 +27,13 @@ public class AutoSaveInteractor implements AutoSaveInputBoundary {
     }
 
     @Override
-    public void saveCanvasState(Graphics2D state) {
+    public void saveCanvasState(RenderedImage state) {
         try {
             String fileName = "canvas_" + System.currentTimeMillis() + ".png";
             File saveFile = new File(tempDirectory, fileName);
 
             // Write the BufferedImage to a file in the tempDirectory
-            ImageIO.write((RenderedImage) state, "png", saveFile);
+            dataAccess.saveDrawing((RenderedImage) state, "png", saveFile);
             outputBoundary.prepareSuccessView(state);
         } catch (IOException e) {
             outputBoundary.prepareFailView("Error saving drawing: " + e.getMessage());
