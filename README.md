@@ -2,26 +2,20 @@
 
 ## Summary
 
-A drawing app that allows the user to draw a quick sketch using a variety of simple drawing tools and a simple palette. The user can choose to randomly generate a color palette or upload an image to generate the palette from. The sketch can then be converted to a completed, coloured art piece.
+A drawing app that allows the user to draw a quick sketch using a variety of simple drawing tools and a simple palette. The user can choose to randomly generate their color palette or upload an image to extract a palette from it. The sketch can then be converted to a completed, coloured art piece.
 
 This program was created to provide a fun an intuitive way for users to create digital art. The color palette generation features let users explore new color combinations, and the AI rendering features make it easy for users to enhance their drawings and experiment with AI-driven art styles. This program is ideal for anyone interested in exploring digital art.
-
-## Authors & Contributors
-
-- Ayushi Verma (@Ayushivvv)
-- Rosanna Jiang (@rosej12)
-- Charles Cai (@peachvegetable)
-- Roberts Haughton (@reobertjhaughton)
-- Ekin Su Dogan (@doganeki)
 
 ## Table of Contents
 
 1. [Features](#features)
-2. [Installation Instructions](#installation-instructions)
+2. [APIs Used](#apis-used)
+2. [Installation](#installation)
 3. [Usage Guide](#usage-guide)
 4. [License](#license)
 5. [Feedback](#feedback)
-6. [Contributions](#contributions)
+6. [Contributing](#contributing)
+6. [Authors & Contributors](#authors--contributors)
 
 ## Features
 
@@ -127,3 +121,11 @@ We welcome contributions to this project! If you'd like to help improve the proj
 - If applicable, reference any issues (e.g., "Fixes #123") in the title.
 - Follow the existing coding style and conventions used in the project (Ensure you follow CLEAN Architecture and SOLID principles).
 - Ensure that your changes do not break existing functionality and include tests as well as screenshots of test coverage where applicable.
+
+## Authors & Contributors
+
+- Ayushi Verma (@Ayushivvv)
+- Rosanna Jiang (@rosej12)
+- Charles Cai (@peachvegetable)
+- Roberts Haughton (@reobertjhaughton)
+- Ekin Su Dogan (@doganeki)
