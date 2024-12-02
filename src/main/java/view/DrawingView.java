@@ -5,15 +5,12 @@ import interface_adapter.Drawing.DrawingController;
 import interface_adapter.Drawing.DrawingState;
 import interface_adapter.Drawing.DrawingViewModel;
 import interface_adapter.ViewManagerModel;
-import use_cases.ImageToColorPalette.ColorPaletteRepositoryInterface;
+import use_cases.ColorPaletteRepositoryInterface;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -21,9 +18,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
-import java.util.Random;
 
 public class DrawingView extends JPanel implements PropertyChangeListener {
+
     private final String viewName = "Drawing";
     private final DrawingViewModel drawingViewModel;
     private DrawingController drawingController;
@@ -34,6 +31,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private final JButton clearButton = new JButton("Clear All");
     private final JButton generateColorButton = new JButton("Generate Colors");
     private final JButton imageToColorButton = new JButton("Generate Color from Image");
+    private final JButton toRenderButton = new JButton("To Render");
 
     private final ButtonGroup toolButtonGroup = new ButtonGroup();
     private final JRadioButton paintButton = new JRadioButton("Paint");
@@ -74,14 +72,16 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         // Add other buttons to buttonsPanel
         buttonsPanel.add(saveButton);
         buttonsPanel.add(clearButton);
+        buttonsPanel.add(toRenderButton);
         buttonsPanel.add(generateColorButton);
         buttonsPanel.add(imageToColorButton);
 
         // Set up action listeners for buttons
         saveButton.addActionListener(e -> saveDrawing());
         clearButton.addActionListener(e -> clearDrawing());
-        generateColorButton.addActionListener(e -> generateRandomColors());
+        generateColorButton.addActionListener(e -> switchToGenerateRandomColorsView());
         imageToColorButton.addActionListener(e -> switchToImageToColorPaletteView());
+        toRenderButton.addActionListener(evt -> switchToRenderView());
 
         // Initialize color palette buttons
         updateColorPalette();
@@ -137,9 +137,10 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         viewManagerModel.firePropertyChanged();
     }
 
-    // Placeholder method for generating random colors
-    private void generateRandomColors() {
-        // Implement your color generation logic here
+    // Method to switch to generating random colors
+    private void switchToGenerateRandomColorsView() {
+        viewManagerModel.setState("GenerateRandomColors");
+        viewManagerModel.firePropertyChanged();
     }
 
     private void eraseTool() {
@@ -223,12 +224,13 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         }
     }
 
-    public String getViewName() {
-        return viewName;
-    }
-
     public void setDrawingController(DrawingController controller) {
         this.drawingController = controller;
+    }
+
+    private void switchToRenderView() {
+        DrawingPanel panel = (DrawingPanel) getComponent(0);
+        drawingController.switchToRenderView(panel.getImage());
     }
 
     private class DrawingPanel extends JPanel {
@@ -296,5 +298,9 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
     public DrawingController getDrawingController(){
         return drawingController;
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }

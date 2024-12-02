@@ -1,5 +1,7 @@
 package use_cases.Drawing;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,5 +33,10 @@ public class DrawingInteractor implements DrawingInputBoundary {
     @Override
     public void executeClear() {
         outputBoundary.prepareSuccessView(null);
+    }
+
+    @Override
+    public void switchToRenderView(Image sketch) {
+        outputBoundary.switchToRenderView(sketch);
     }
 }

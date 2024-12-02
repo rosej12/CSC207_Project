@@ -4,7 +4,7 @@ import interface_adapter.ViewModel;
 
 public class DrawingViewModel extends ViewModel<DrawingState> {
     public DrawingViewModel() {
-        super("drawing");
+        super("Drawing");
         setState(new DrawingState());
     }
 }
