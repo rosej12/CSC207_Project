@@ -8,25 +8,25 @@ import java.io.IOException;
 
 public class DrawingInteractor implements DrawingInputBoundary {
 
+    private final DrawingDataAccessInterface dataAccess;
     private final DrawingOutputBoundary outputBoundary;
-    private final DrawingDataAccessInterface dataAccessInterface;
 
-    public DrawingInteractor(DrawingOutputBoundary outputBoundary, DrawingDataAccessInterface dataAccessInterface) {
+    public DrawingInteractor(DrawingDataAccessInterface dataAccess, DrawingOutputBoundary outputBoundary) {
+        this.dataAccess = dataAccess;
         this.outputBoundary = outputBoundary;
-        this.dataAccessInterface = dataAccessInterface;
     }
 
     @Override
     public void executeSave(RenderedImage image, File file) {
         try {
             if (image != null) {
-                ImageIO.write(image, "png", file);
+                dataAccess.saveDrawing(image, file);
                 outputBoundary.prepareSuccessView(image);
             } else {
                 outputBoundary.prepareFailView("Drawing is empty");
             }
         } catch (IOException e) {
-            outputBoundary.prepareFailView("Error saving drawing" + e.getMessage());
+            outputBoundary.prepareFailView("Error saving drawing: " + e.getMessage());
         }
     }
 

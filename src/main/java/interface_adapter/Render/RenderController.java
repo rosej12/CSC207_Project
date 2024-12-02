@@ -19,7 +19,6 @@ public class RenderController {
      * Executes the Render Use Case.
      */
     public void execute(String description, Image sketch) {
-        // TODO?
         final RenderInputData renderInputData = new RenderInputData(description, sketch);
         renderInteractor.execute(renderInputData);
     }

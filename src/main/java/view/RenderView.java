@@ -123,8 +123,6 @@ public class RenderView extends JPanel implements ActionListener, PropertyChange
         this.add(toDrawingButton);
     }
 
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
         renderController.switchToDrawingView();

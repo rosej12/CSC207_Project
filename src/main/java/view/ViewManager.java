@@ -1,20 +1,20 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
-
-import javax.smartcardio.Card;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.CardLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.JPanel;
+
+import interface_adapter.ViewManagerModel;
 
 /**
  * The View Manager for the program. It listens for property change events
  * in the ViewManagerModel and updates which View should be visible.
  */
 public class ViewManager implements PropertyChangeListener {
-    private final JPanel views;
     private final CardLayout cardLayout;
+    private final JPanel views;
     private final ViewManagerModel viewManagerModel;
 
     public ViewManager(JPanel views, CardLayout cardLayout, ViewManagerModel viewManagerModel) {
@@ -26,9 +26,9 @@ public class ViewManager implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
-            final String viewModelName = (String) evt.getNewValue();
-            cardLayout.show(views, viewModelName);
+        if ("state".equals(evt.getPropertyName())) {
+            String viewName = (String) evt.getNewValue();
+            cardLayout.show(views, viewName);
         }
     }
 }
