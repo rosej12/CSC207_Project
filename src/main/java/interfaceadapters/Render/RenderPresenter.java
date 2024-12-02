@@ -13,11 +13,13 @@ public class RenderPresenter implements RenderOutputBoundary {
     private final DrawingViewModel drawingViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    public RenderPresenter(ViewManagerModel viewManagerModel, RenderViewModel renderViewModel, DrawingViewModel drawingViewModel) {
+    public RenderPresenter(ViewManagerModel viewManagerModel, RenderViewModel renderViewModel,
+                           DrawingViewModel drawingViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.renderViewModel = renderViewModel;
         this.drawingViewModel = drawingViewModel;
     }
+
     @Override
     public void prepareSuccessView(RenderOutputData outputData) {
         // On success, update the render states that are shown on the render view

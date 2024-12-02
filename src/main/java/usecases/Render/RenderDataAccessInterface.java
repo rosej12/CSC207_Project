@@ -1,6 +1,6 @@
 package usecases.Render;
 
-import java.awt.*;
+import java.awt.Image;
 
 /**
  * DAO for the Render Use Case.

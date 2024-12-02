@@ -1,11 +1,12 @@
 package usecases.Render;
 
-import java.awt.*;
+import java.awt.Image;
 
 /**
  * The Render Interactor.
  */
 public class RenderInteractor implements RenderInputBoundary {
+    private static final int DESCRIPTIONLENGTH = 5000;
     private final RenderDataAccessInterface renderDataAccessObject;
     private final RenderOutputBoundary renderPresenter;
 
@@ -16,11 +17,13 @@ public class RenderInteractor implements RenderInputBoundary {
 
     @Override
     public void execute(RenderInputData renderInputData) {
-        if (renderInputData.getDescription().length() > 5000) {
+        if (renderInputData.getDescription().length() > DESCRIPTIONLENGTH) {
             renderPresenter.prepareFailView("Description is longer than 5000 characters.");
-        } else if (renderInputData.getDescription().isEmpty()) {
+        }
+        else if (renderInputData.getDescription().isEmpty()) {
             renderPresenter.prepareFailView("Description is empty.");
-        } else {
+        }
+        else {
             Image renderedImage = renderDataAccessObject.getRender(
                     renderInputData.getDescription(), renderInputData.getSketch());
             final RenderOutputData renderOutputData = new RenderOutputData(renderedImage);

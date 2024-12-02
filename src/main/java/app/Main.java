@@ -1,7 +1,7 @@
 package app;
 
-import dataaccesses.RenderDataAccessObject;
 import dataaccesses.DrawingFileDataAccess;
+import dataaccesses.RenderDataAccessObject;
 import usecases.Drawing.DrawingDataAccessInterface;
 import usecases.Render.RenderDataAccessInterface;
 
@@ -21,17 +21,17 @@ public class Main {
 
         // Build the application by adding components and setting up use cases
         appBuilder
-                .addDao(drawingDataAccess)          // Injects the data access object
-                .addRenderDao(renderDataAccess)     // Injects the data access object
-                .addDrawingView()                   // Adds the Drawing View
-                .addImageToColorPaletteView()       // Adds the ImageToColorPalette View
+                .addDao(drawingDataAccess)
+                .addRenderDao(renderDataAccess)
+                .addDrawingView()
+                .addImageToColorPaletteView()
                 .addGenerateRandomColorPaletteView()
-                .addRenderView()                    // Adds the Render View
-                .addDrawingUseCase()                // Sets up the Drawing Use Case
-                .addImageToColorPaletteUseCase()    // Sets up the ImageToColorPalette Use Case
+                .addRenderView()
+                .addDrawingUseCase()
+                .addImageToColorPaletteUseCase()
                 .addGenerateRandomColorPaletteUseCase()
-                .addRenderUseCase()                 // Sets up the Render Use Case
-                .build()                            // Builds the application
-                .setVisible(true);                  // Makes the application window visible
+                .addRenderUseCase()
+                .build()
+                .setVisible(true);
     }
 }

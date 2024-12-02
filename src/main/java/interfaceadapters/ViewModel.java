@@ -22,14 +22,29 @@ public class ViewModel<T> {
         this.viewName = viewName;
     }
 
+    /**
+     * Retrieves the name of the current view.
+     *
+     * @return A {@link String} representing the name of the view.
+     */
     public String getViewName() {
         return this.viewName;
     }
 
+    /**
+     * Retrieves the current state of the view model.
+     *
+     * @return An instance of type {@code T} representing the current state.
+     */
     public T getState() {
         return this.state;
     }
 
+    /**
+     * Updates the state of the view model.
+     *
+     * @param state An instance of type {@code T} representing the new state to be set.
+     */
     public void setState(T state) {
         this.state = state;
     }
@@ -45,8 +60,8 @@ public class ViewModel<T> {
      * Fires a property changed event for the state of this ViewModel, which
      * allows the user to specify a different propertyName. This can be useful
      * when a class is listening for multiple kinds of property changes.
-     * <p>For example, the LoggedInView listens for two kinds of property changes;
-     * it can use the property name to distinguish which property has changed.</p>
+     * For example, the LoggedInView listens for two kinds of property changes;
+     * it can use the property name to distinguish which property has changed.
      * @param propertyName the label for the property that was changed
      */
     public void firePropertyChanged(String propertyName) {

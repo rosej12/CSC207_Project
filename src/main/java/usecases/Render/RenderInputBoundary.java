@@ -12,7 +12,7 @@ public interface RenderInputBoundary {
     void execute(RenderInputData renderInputData);
 
     /**
-     * Executes the "switch to drawing view" use case
+     * Executes the "switch to drawing view" use case.
      */
     void switchToDrawingView();
 }

@@ -1,6 +1,6 @@
 package usecases.Render;
 
-import java.awt.*;
+import java.awt.Image;
 
 public class RenderOutputData {
     private final Image renderedImage;
@@ -9,6 +9,11 @@ public class RenderOutputData {
         this.renderedImage = renderedImage;
     }
 
+    /**
+     * Retrieves the rendered image.
+     *
+     * @return An {@link Image} object representing the rendered image.
+     */
     public Image getRenderedImage() {
         return renderedImage;
     }
