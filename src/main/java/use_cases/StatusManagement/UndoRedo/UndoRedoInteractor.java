@@ -21,18 +21,14 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
     public void undo() {
         if (!undoStack.isEmpty()) {
             DrawingPanel action = undoStack.pop();
-            redoStack.push(action);
-        }
-
+            redoStack.push(action);}
     }
 
     @Override
     public void redo() {
         if (!redoStack.isEmpty()) {
             DrawingPanel action = redoStack.pop();
-            undoStack.push(action);
-        }
-
+            undoStack.push(action);}
     }
 
     public static Stack<DrawingPanel> getRedoStack() {
