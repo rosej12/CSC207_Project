@@ -27,19 +27,20 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
     private final ViewManagerModel viewManagerModel;
     private ImageToColorPaletteController imageToColorPaletteController;
 
+    private JPanel colorPanel;
+
     public ImageToColorPaletteView(ImageToColorPaletteViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.viewModel.addPropertyChangeListener(this);
-        this.viewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
 
-        // Panel for buttons
+        // Initialize and add the buttons panel
         JPanel buttonsPanel = new JPanel();
         JButton uploadButton = new JButton("Upload Image");
-        buttonsPanel.add(uploadButton);
         JButton backButton = new JButton("Back");
+        buttonsPanel.add(uploadButton);
         buttonsPanel.add(backButton);
 
         uploadButton.addActionListener(event -> {
@@ -76,8 +77,15 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
     }
 
     private void displayColors(ColorPalette colorPalette) {
-        JPanel colorPanel = new JPanel();
+        // Remove the existing color panel if it exists
+        if (colorPanel != null) {
+            remove(colorPanel);
+        }
+
+        // Create a new color panel
+        colorPanel = new JPanel();
         colorPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
         for (Color color : colorPalette.getColors()) {
             JLabel label = new JLabel();
             label.setOpaque(true);
@@ -85,6 +93,7 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
             label.setPreferredSize(new Dimension(DIMENSIONALITY, DIMENSIONALITY));
             colorPanel.add(label);
         }
+
         add(colorPanel, BorderLayout.CENTER);
         revalidate();
         repaint();
@@ -92,7 +101,7 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        // Handle any additional actions if necessary
     }
 
     /**
@@ -113,3 +122,4 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
         this.imageToColorPaletteController = controller;
     }
 }
+
