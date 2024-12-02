@@ -1,19 +1,19 @@
-package interface_adapter.StatusManagement;
+package interface_adapter.StatusManagement.AutoSave;
 
 import use_cases.StatusManagement.AutoSave.AutoSaveOutputBoundary;
 
 import java.awt.image.RenderedImage;
 
-public class StatusPresenter implements AutoSaveOutputBoundary {
-    private StatusViewModel viewModel;
+public class AutoSavePresenter implements AutoSaveOutputBoundary {
+    private AutoSaveViewModel viewModel;
 
-    public StatusPresenter(StatusViewModel viewModel) {
-        this.viewModel = new StatusViewModel();
+    public AutoSavePresenter(AutoSaveViewModel viewModel) {
+        this.viewModel = new AutoSaveViewModel();
     }
 
     @Override
     public void prepareSuccessView(RenderedImage drawing) {
-        viewModel.getState().setDrawing(drawing);
+        viewModel.getState().setState(drawing);
         viewModel.getState().setError(null);
         viewModel.firePropertyChanged();
     }
@@ -27,7 +27,7 @@ public class StatusPresenter implements AutoSaveOutputBoundary {
     /**
      * Provides the updated ViewModel for the UI layer.
      */
-    public StatusViewModel getViewModel() {
+    public AutoSaveViewModel getViewModel() {
         return viewModel;
     }
 }
