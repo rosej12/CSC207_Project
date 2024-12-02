@@ -15,6 +15,8 @@ public class AutoSaveInteractor implements AutoSaveInputBoundary {
     private final AutoSaveOutputBoundary outputBoundary;
     private Boolean lastFastSaved = false;
 
+    private final long saveIntervalMillis = 3000; // Minimum time interval between saves (e.g., 5 seconds)
+    private long lastSaveTime = 0; // Timestamp of the last save
     public File tempDirectory = new File(System.getProperty("user.dir"), "inkflow");
 
     public AutoSaveInteractor(AutoSaveDataAccessInterface dataAccess, AutoSaveOutputBoundary outputBoundary) {
@@ -28,16 +30,43 @@ public class AutoSaveInteractor implements AutoSaveInputBoundary {
 
     @Override
     public void saveCanvasState(RenderedImage state) {
-        try {
-            String fileName = "canvas_" + System.currentTimeMillis() + ".png";
-            File saveFile = new File(tempDirectory, fileName);
 
-            // Write the BufferedImage to a file in the tempDirectory
-            dataAccess.saveDrawing((RenderedImage) state, "png", saveFile);
-            outputBoundary.prepareSuccessView(state);
-        } catch (IOException e) {
-            outputBoundary.prepareFailView("Error saving drawing: " + e.getMessage());
+        long currentTime = System.currentTimeMillis();
+
+        // Check if sufficient time has passed since the last save
+        if ((currentTime - lastSaveTime) >= saveIntervalMillis) {
+            try {
+                String fileName = "canvas_" + currentTime + ".png";
+                File saveFile = new File(tempDirectory, fileName);
+
+                // Write the RenderedImage to a file in the tempDirectory
+                dataAccess.saveDrawing(state, "png", saveFile);
+
+                // Update the last save time
+                lastSaveTime = currentTime;
+
+                // Notify success via the output boundary
+                outputBoundary.prepareSuccessView(state);
+            } catch (IOException e) {
+                // Notify failure via the output boundary
+                outputBoundary.prepareFailView("Error saving drawing: " + e.getMessage());
+            }
+        } else {
+            // Notify that saving was skipped due to the time interval
+            outputBoundary.prepareSuccessView(state); // Update the view even if not saved
         }
+
+//
+//        try {
+//            String fileName = "canvas_" + System.currentTimeMillis() + ".png";
+//            File saveFile = new File(tempDirectory, fileName);
+//
+//            // Write the BufferedImage to a file in the tempDirectory
+//            dataAccess.saveDrawing((RenderedImage) state, "png", saveFile);
+//            outputBoundary.prepareSuccessView(state);
+//        } catch (IOException e) {
+//            outputBoundary.prepareFailView("Error saving drawing: " + e.getMessage());
+//        }
 
     }
 
