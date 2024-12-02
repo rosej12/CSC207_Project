@@ -24,13 +24,16 @@ public class GenerateRandomColorPaletteInteractor implements GenerateRandomColor
         Random rand = new Random();
 
         if (existingPalette != null) {
+            List<Color> colors = new ArrayList<>();
             for (Color color : existingPalette.getColors()) {
                 if (!color.isLocked()){
                     color.setRed(rand.nextInt(256));
                     color.setGreen(rand.nextInt(256));
                     color.setBlue(rand.nextInt(256));
                 }
+                colors.add(color);
             }
+            existingPalette = new ColorPalette(colors);
         } else {
             List<Color> colors = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
