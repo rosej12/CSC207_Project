@@ -2,7 +2,7 @@
 
 ## Summary
 
-A drawing app that allows the user to draw a quick sketch using a variety of simple drawing tools and a simple palette. The user can choose to randomly generate a color palette or upload an image to generate the palette from. The sketch can then be converted to a completed, coloured art piece.
+A drawing app that allows the user to draw a quick sketch using a variety of simple drawing tools and a simple palette. The user can choose to randomly generate their color palette or upload an image to extract a palette from it. The sketch can then be converted to a completed, coloured art piece.
 
 This program was created to provide a fun an intuitive way for users to create digital art. The color palette generation features let users explore new color combinations, and the AI rendering features make it easy for users to enhance their drawings and experiment with AI-driven art styles. This program is ideal for anyone interested in exploring digital art.
 
