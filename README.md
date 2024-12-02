@@ -8,11 +8,11 @@ This program was created to provide a fun an intuitive way for users to create d
 
 ## Authors & Contributors
 
-- Ayushi Verma
-- Rosanna Jiang
-- Charles Cai
-- Roberts Haughton
-- Ekin Su Dogan
+- Ayushi Verma (@Ayushivvv)
+- Rosanna Jiang (@rosej12)
+- Charles Cai (@peachvegetable)
+- Roberts Haughton (@reobertjhaughton)
+- Ekin Su Dogan (@doganeki)
 
 ## Table of Contents
 
