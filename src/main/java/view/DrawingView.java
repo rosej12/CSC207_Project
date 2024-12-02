@@ -50,6 +50,8 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private int drawSize = 1;
     private int eraseSize;
     private int paintSize;
+    private static File file = new File("src/java");
+//    private static File filename = file.getAbsolutePath();
 
     private Color currentColor = Color.BLACK;
     private DrawingPanel drawingPanel;
@@ -152,14 +154,20 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         currentColor = Color.BLACK;
     }
 
-    private void saveDrawing() {
+    private void saveToFile(String fileName, RenderedImage canva) {
+        file = new File(fileName);
+        drawingController.executeSave(canva, file);
+    }
+
+    public String saveDrawing() {
         JFileChooser fileChooser = new JFileChooser();
         int option = fileChooser.showSaveDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
+            file = fileChooser.getSelectedFile();
             RenderedImage image = (RenderedImage) drawingPanel.getImage();
             drawingController.executeSave(image, file);
         }
+        return file.getAbsolutePath();
     }
 
     private void clearDrawing() {
@@ -231,8 +239,16 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         this.drawingController = controller;
     }
 
-    private class DrawingPanel extends JPanel {
-        private Image image;
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    public class DrawingPanel extends JPanel {
+        private static Image image;
         private Graphics2D g2;
 
         public DrawingPanel() {
@@ -289,7 +305,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
             }
         }
 
-        public Image getImage() {
+        public static Image getImage() {
             return image;
         }
     }
