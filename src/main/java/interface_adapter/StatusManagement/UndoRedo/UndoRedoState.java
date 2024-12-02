@@ -9,7 +9,7 @@ public class UndoRedoState {
     private String error;
     private static String status;
 
-    public static RenderedImage getState() {
+    public RenderedImage getState() {
         return state;
     }
 

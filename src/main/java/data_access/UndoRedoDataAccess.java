@@ -7,7 +7,9 @@ import java.io.IOException;
 
 public class UndoRedoDataAccess implements UndoRedoDataAccessInterface {
 
-
+    public UndoRedoDataAccess() {
+        super();
+    }
 
     @Override
     public BufferedImage getUndoState() throws IOException {

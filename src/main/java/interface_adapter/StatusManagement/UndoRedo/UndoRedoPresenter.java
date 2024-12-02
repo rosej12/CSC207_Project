@@ -8,6 +8,7 @@ import view.DrawingView.DrawingPanel;
 import use_cases.StatusManagement.UndoRedo.UndoRedoOutputBoundary;
 import view.DrawingView;
 
+import java.awt.*;
 import java.awt.image.RenderedImage;
 
 public class UndoRedoPresenter implements UndoRedoOutputBoundary {
@@ -31,12 +32,20 @@ public class UndoRedoPresenter implements UndoRedoOutputBoundary {
 
 
     @Override
-    public DrawingPanel getUndoAction() {
-        return UndoRedoInteractor.getUndoStack().pop();
+    public RenderedImage getUndoAction() {
+        RenderedImage image = (RenderedImage) UndoRedoInteractor.getUndoStack().pop().getImage();
+        viewModel.getState().setState(image);
+        viewModel.setState(viewModel.getState());
+        viewModel.firePropertyChanged();
+        return image;
     }
 
     @Override
-    public DrawingPanel getRedoAction() {
-        return UndoRedoInteractor.getRedoStack().pop();
+    public RenderedImage getRedoAction() {
+        RenderedImage image = (RenderedImage) UndoRedoInteractor.getRedoStack().pop().getImage();
+        viewModel.getState().setState(image);
+        viewModel.setState(viewModel.getState());
+        viewModel.firePropertyChanged();
+        return image;
     }
 }

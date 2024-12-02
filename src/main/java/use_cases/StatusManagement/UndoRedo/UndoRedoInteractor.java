@@ -5,10 +5,13 @@ import view.DrawingView.DrawingPanel;
 import java.util.Stack;
 
 public class UndoRedoInteractor implements UndoRedoInputBoundary {
+    private UndoRedoOutputBoundary boundary;
+
     private static final Stack<DrawingPanel> undoStack = new Stack<>();
     private static final Stack<DrawingPanel> redoStack = new Stack<>();
 
-    public UndoRedoInteractor() {
+    public UndoRedoInteractor(UndoRedoOutputBoundary boundary) {
+        this.boundary = boundary;
     }
 
     @Override
@@ -21,7 +24,9 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
     public void undo() {
         if (!undoStack.isEmpty()) {
             DrawingPanel action = undoStack.pop();
-            redoStack.push(action);}
+            redoStack.push(action);
+        boundary.getUndoAction();
+        }
     }
 
     @Override

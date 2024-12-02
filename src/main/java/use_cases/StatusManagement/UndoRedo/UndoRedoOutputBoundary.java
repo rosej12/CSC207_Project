@@ -2,7 +2,9 @@ package use_cases.StatusManagement.UndoRedo;
 
 import view.DrawingView.DrawingPanel;
 
+import java.awt.image.RenderedImage;
+
 public interface UndoRedoOutputBoundary {
-    DrawingPanel getUndoAction();
-    DrawingPanel getRedoAction();
+    RenderedImage getUndoAction();
+    RenderedImage getRedoAction();
 }
