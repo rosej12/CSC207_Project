@@ -1,13 +1,13 @@
 package use_case.render;
 
 import data_access.RenderDataAccessObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import use_cases.Render.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RenderInteractorTest {
 
@@ -20,7 +20,7 @@ public class RenderInteractorTest {
             @Override
             public void prepareSuccessView(RenderOutputData outputData) {
                 // Check if an image was successfully generated
-                assertTrue(outputData.getRenderedImage() != null);
+                assertNotNull(outputData.getRenderedImage(), "Rendered image should not be null.");
             }
 
             @Override
@@ -54,7 +54,9 @@ public class RenderInteractorTest {
             }
 
             @Override
-            public void switchToDrawingView() { /* Nothing should happen on success */ }
+            public void switchToDrawingView() {
+                // Nothing should happen on success
+            }
         };
 
         RenderInputBoundary interactor = new RenderInteractor(renderDAO, successPresenter);
@@ -124,5 +126,5 @@ public class RenderInteractorTest {
         g.dispose();
         return image;
     }
-
 }
+
