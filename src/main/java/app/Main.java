@@ -27,10 +27,12 @@ public class Main {
                 .addImageToColorPaletteView()
                 .addGenerateRandomColorPaletteView()
                 .addRenderView()
+                .addShapeView()
                 .addDrawingUseCase()
                 .addImageToColorPaletteUseCase()
                 .addGenerateRandomColorPaletteUseCase()
                 .addRenderUseCase()
+                .addShapesUseCase()
                 .build()
                 .setVisible(true);
     }

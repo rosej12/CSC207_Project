@@ -21,6 +21,9 @@ import interfaceadapters.ImageToColorPalette.ImageToColorPaletteViewModel;
 import interfaceadapters.Render.RenderController;
 import interfaceadapters.Render.RenderPresenter;
 import interfaceadapters.Render.RenderViewModel;
+import interfaceadapters.Shape.ShapeController;
+import interfaceadapters.Shape.ShapePresenter;
+import interfaceadapters.Shape.ShapeViewModel;
 import interfaceadapters.ViewManagerModel;
 import usecases.ColorPaletteRepositoryInterface;
 import usecases.Drawing.DrawingDataAccessInterface;
@@ -38,10 +41,14 @@ import usecases.Render.RenderDataAccessInterface;
 import usecases.Render.RenderInputBoundary;
 import usecases.Render.RenderInteractor;
 import usecases.Render.RenderOutputBoundary;
+import usecases.Shape.ShapeInputBoundary;
+import usecases.Shape.ShapeInteractor;
+import usecases.Shape.ShapeOutputBoundary;
 import view.DrawingView;
 import view.GenerateRandomColorPaletteView;
 import view.ImageToColorPaletteView;
 import view.RenderView;
+import view.ShapeView;
 import view.ViewManager;
 
 public class AppBuilder {
@@ -53,6 +60,7 @@ public class AppBuilder {
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     private final ColorPaletteRepositoryInterface colorPaletteRepository;
+    private final ShapeViewModel shapeViewModel = new ShapeViewModel();
 
     private DrawingView drawingView;
     private DrawingViewModel drawingViewModel;
@@ -65,6 +73,8 @@ public class AppBuilder {
     private RenderView renderView;
     private RenderViewModel renderViewModel;
     private RenderDataAccessInterface renderDao;
+
+    private ShapeView shapeView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -108,7 +118,7 @@ public class AppBuilder {
      */
     public AppBuilder addDrawingView() {
         drawingViewModel = new DrawingViewModel();
-        drawingView = new DrawingView(drawingViewModel, viewManagerModel, colorPaletteRepository);
+        drawingView = new DrawingView(drawingViewModel, viewManagerModel, colorPaletteRepository, shapeViewModel);
         cardPanel.add(drawingView, drawingView.getViewName());
         return this;
     }
@@ -163,6 +173,26 @@ public class AppBuilder {
         renderViewModel = new RenderViewModel();
         renderView = new RenderView(renderViewModel);
         cardPanel.add(renderView, renderView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Shape View to the application.
+     *
+     * <p>
+     * This method initializes the {@link ShapeViewModel} and {@link ShapeView},
+     * then adds the view to the card panel for state-based navigation.
+     * </p>
+     *
+     * @return the current instance of {@link AppBuilder}.
+     */
+    public AppBuilder addShapeView() {
+        ShapeOutputBoundary shapePresenter = new ShapePresenter(shapeViewModel);
+        ShapeInputBoundary shapeInteractor = new ShapeInteractor(shapePresenter);
+        ShapeController shapeController = new ShapeController(shapeInteractor);
+
+        shapeView = new ShapeView(shapeController, shapeViewModel, viewManagerModel);
+        cardPanel.add(shapeView, shapeView.getViewName());
         return this;
     }
 
@@ -252,6 +282,33 @@ public class AppBuilder {
                 new GenerateRandomColorController(generateRandomColorPaletteInteractor);
 
         generateRandomColorPaletteView.setGenerateRandomColorController(generateRandomColorController);
+        return this;
+    }
+
+    /**
+     * Configures and adds the Shape use case to the application.
+     *
+     * <p>
+     * This method initializes the necessary components, including:
+     * <ul>
+     * <li>{@link ShapePresenter} for presenting the output.</li>
+     * <li>{@link ShapeInteractor} as the input boundary.</li>
+     * <li>{@link ShapeController} as the controller.</li>
+     * </ul>
+     * The controller is then set for the {@link GenerateRandomColorPaletteView}.
+     * </p>
+     *
+     * @return the current instance of {@link AppBuilder}.
+     */
+    public AppBuilder addShapesUseCase() {
+        final ShapeOutputBoundary shapeOutputBoundary = new ShapePresenter(shapeViewModel);
+        final ShapeInputBoundary shapeInteractor = new ShapeInteractor(shapeOutputBoundary);
+        final ShapeController shapeController = new ShapeController(shapeInteractor);
+
+        if (shapeView != null) {
+            shapeView = new ShapeView(shapeController, shapeViewModel, viewManagerModel);
+        }
+
         return this;
     }
 
