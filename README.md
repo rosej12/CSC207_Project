@@ -87,6 +87,10 @@ Before installing, make sure you have the following tools installed on your syst
   - Enter a description of your sketch, and you will get a finished drawing based on your sketch and description. 
 - **Saving Your Artwork:**
   - Save your sketch by clicking the "Save Image" button.
+- **Shapes:**
+  - Go to the "Shapes" screen to generate custom shapes. 
+  - Select a shape type (line, rectangle, square, triangle, or circle) and customize its dimensions, color, and stroke size. 
+  - Select "Draw Shape" and add the generated shape to your canvas.
 
 ## License
 
