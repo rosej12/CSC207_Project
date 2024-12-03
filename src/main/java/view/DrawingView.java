@@ -40,6 +40,8 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private final ViewManagerModel viewManagerModel;
     private final ColorPaletteRepositoryInterface colorPaletteRepository;
 
+    private final JRadioButton paintButton;
+    private final JRadioButton eraseButton;
     private final int initialSize = 1;
     private final SpinnerNumberModel paintModel = new SpinnerNumberModel(initialSize, initialSize,
             initialSize + 29, 1);
@@ -108,9 +110,9 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
         // Top panel with tools
         ButtonGroup toolButtonGroup = new ButtonGroup();
-        JRadioButton paintButton = new JRadioButton("Paint");
+        paintButton = new JRadioButton("Paint");
         toolButtonGroup.add(paintButton);
-        JRadioButton eraseButton = new JRadioButton("Erase");
+        eraseButton = new JRadioButton("Erase");
         toolButtonGroup.add(eraseButton);
         paintButton.setSelected(true);
 
@@ -256,6 +258,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         entities.Color color = colorPaletteRepository.getColorPalette().getColor(index);
         currentColor = new java.awt.Color(
                 color.getRed(), color.getGreen(), color.getBlue());
+        paintButton.setSelected(true);
     }
 
     private void switchToShapeView() {
@@ -366,7 +369,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
                     prevX = e.getX();
                     prevY = e.getY();
                     g2.setColor(currentColor);
-                    g2.drawLine(e.getX(), e.getY(), e.getX(), e.getY());
+                    g2.drawLine(e.getX() + drawSize / 2, e.getY() + drawSize / 2, e.getX() - drawSize / 2, e.getY() - drawSize / 2);
                     repaint();
                 }
             });
