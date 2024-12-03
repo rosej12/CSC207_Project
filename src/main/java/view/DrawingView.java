@@ -25,6 +25,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entities.ColorPalette;
 import interfaceadapters.Drawing.DrawingController;
@@ -169,12 +170,42 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
     private void saveDrawing() {
         JFileChooser fileChooser = new JFileChooser();
+
+        // Create separate filters for each image extension
+        FileNameExtensionFilter jpgFilter = new FileNameExtensionFilter("JPEG Image (*.jpg, *.jpeg)", "jpg");
+        FileNameExtensionFilter pngFilter = new FileNameExtensionFilter("PNG Image (*.png)", "png");
+        FileNameExtensionFilter gifFilter = new FileNameExtensionFilter("GIF Image (*.gif)", "gif");
+
+        // Add filters to the file chooser
+        fileChooser.addChoosableFileFilter(jpgFilter);
+        fileChooser.addChoosableFileFilter(pngFilter);
+        fileChooser.addChoosableFileFilter(gifFilter);
+
+        // Set default filter
+        fileChooser.setAcceptAllFileFilterUsed(false);
+
         int option = fileChooser.showSaveDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
+            String extension = ((FileNameExtensionFilter) fileChooser.getFileFilter()).getExtensions()[0];
+            File file = new File(addExtensionIfNoneAlready(fileChooser.getSelectedFile().getAbsolutePath(), extension));
             RenderedImage image = (RenderedImage) drawingPanel.getImage();
             drawingController.executeSave(image, file);
         }
+    }
+
+    private String addExtensionIfNoneAlready(String fileName, String extension) {
+        if (getFileExtension(fileName).isEmpty()) {
+            return fileName + "." + extension;
+        }
+        return fileName;
+    }
+
+    private String getFileExtension(String fileName) {
+        int extensionIndex = fileName.lastIndexOf('.');
+        if (extensionIndex >= 0 && extensionIndex < fileName.length() - 1) {
+            return fileName.toLowerCase().substring(extensionIndex + 1);
+        }
+        return "";
     }
 
     private void clearDrawing() {
