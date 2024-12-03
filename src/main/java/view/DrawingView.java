@@ -55,6 +55,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private int eraseSize;
     private int paintSize;
 
+    private Color paintingColor = Color.BLACK;
     private Color currentColor = Color.BLACK;
     private final DrawingPanel drawingPanel;
     private JButton[] colorButtons;
@@ -164,7 +165,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
     private void paintTool() {
         drawSize = paintSize;
-        currentColor = Color.BLACK;
+        currentColor = paintingColor;
     }
 
     private void saveDrawing() {
@@ -219,6 +220,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         entities.Color color = colorPaletteRepository.getColorPalette().getColor(index);
         currentColor = new java.awt.Color(
                 color.getRed(), color.getGreen(), color.getBlue());
+        paintingColor = currentColor;
     }
 
     @Override
