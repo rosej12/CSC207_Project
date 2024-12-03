@@ -317,7 +317,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
                     prevX = e.getX();
                     prevY = e.getY();
                     g2.setColor(currentColor);
-                    g2.drawLine(e.getX(), e.getY(), e.getX(), e.getY());
+                    g2.drawLine(e.getX() + drawSize / 2, e.getY() + drawSize / 2, e.getX() - drawSize / 2, e.getY() - drawSize / 2);
                     repaint();
                 }
             });
