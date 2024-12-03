@@ -29,4 +29,8 @@ public class RenderController {
     public void switchToDrawingView() {
         renderInteractor.switchToDrawingView();
     }
+
+    public void saveRender() {
+
+    }
 }

@@ -18,21 +18,26 @@ public class RenderInteractor implements RenderInputBoundary {
     @Override
     public void execute(RenderInputData renderInputData) {
         if (renderInputData.getDescription().length() > DESCRIPTIONLENGTH) {
-            renderPresenter.prepareFailView("Description is longer than 5000 characters.");
+            renderPresenter.prepareRenderFailView("Description is longer than 5000 characters.");
         }
         else if (renderInputData.getDescription().isEmpty()) {
-            renderPresenter.prepareFailView("Description is empty.");
+            renderPresenter.prepareRenderFailView("Description is empty.");
         }
         else {
             Image renderedImage = renderDataAccessObject.getRender(
                     renderInputData.getDescription(), renderInputData.getSketch());
             final RenderOutputData renderOutputData = new RenderOutputData(renderedImage);
-            renderPresenter.prepareSuccessView(renderOutputData);
+            renderPresenter.prepareRenderSuccessView(renderOutputData);
         }
     }
 
     @Override
     public void switchToDrawingView() {
         renderPresenter.switchToDrawingView();
+    }
+
+    @Override
+    public void saveRender() {
+//        renderPresenter.
     }
 }

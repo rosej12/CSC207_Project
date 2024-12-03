@@ -15,4 +15,9 @@ public interface RenderInputBoundary {
      * Executes the "switch to drawing view" use case.
      */
     void switchToDrawingView();
+
+    /**
+     * Executes the save render use case.
+     */
+    void saveRender();
 }

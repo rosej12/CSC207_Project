@@ -40,6 +40,7 @@ public class RenderView extends JPanel implements ActionListener, PropertyChange
     private final JTextArea descriptionTextInput;
     private final JLabel errorLabel;
     private final JButton renderButton;
+    private final JButton saveRenderButton;
     private final JButton toDrawingButton;
 
     private final int iconSize = 300;
@@ -119,6 +120,10 @@ public class RenderView extends JPanel implements ActionListener, PropertyChange
         errorLabel.setBorder(new EmptyBorder(BORDERTOP, 0, EMPTYBORDERBOTTOM, 0));
         errorLabel.setForeground(Color.RED);
 
+        // Button for saving render
+        saveRenderButton = new JButton(RenderViewModel.SAVE_RENDER_BUTTON_LABEL);
+        saveRenderButton.addActionListener(e -> {});
+
         // Button to drawing
         toDrawingButton = new JButton(RenderViewModel.TO_DRAWING_BUTTON_LABEL);
         toDrawingButton.addActionListener(this);
@@ -127,6 +132,7 @@ public class RenderView extends JPanel implements ActionListener, PropertyChange
         this.add(actionPanel);
         this.add(iconPanel);
         this.add(errorLabel);
+        this.add(renderButton);
         this.add(toDrawingButton);
     }
 

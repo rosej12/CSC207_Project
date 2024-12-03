@@ -21,7 +21,7 @@ public class RenderPresenter implements RenderOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(RenderOutputData outputData) {
+    public void prepareRenderSuccessView(RenderOutputData outputData) {
         // On success, update the render states that are shown on the render view
         final RenderState renderState = renderViewModel.getState();
         renderState.setRender(outputData.getRenderedImage());
@@ -30,7 +30,7 @@ public class RenderPresenter implements RenderOutputBoundary {
     }
 
     @Override
-    public void prepareFailView(String errorMessage) {
+    public void prepareRenderFailView(String errorMessage) {
         // On failure, update the error message shown on render view
         final RenderState renderState = renderViewModel.getState();
         renderState.setRenderError(errorMessage);
@@ -41,5 +41,10 @@ public class RenderPresenter implements RenderOutputBoundary {
     public void switchToDrawingView() {
         viewManagerModel.setState(drawingViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void saveRender() {
+
     }
 }

@@ -9,16 +9,18 @@ public interface RenderOutputBoundary {
      * Prepares the success view for the Render Use Case.
      * @param outputData the output data
      */
-    void prepareSuccessView(RenderOutputData outputData);
+    void prepareRenderSuccessView(RenderOutputData outputData);
 
     /**
      * Prepares the failure view for the Render Use Case.
      * @param errorMessage the output data
      */
-    void prepareFailView(String errorMessage);
+    void prepareRenderFailView(String errorMessage);
 
     /**
      * Switches to the Drawing View.
      */
     void switchToDrawingView();
+
+    void saveRender();
 }

@@ -18,13 +18,13 @@ public class RenderInteractorTest {
 
         RenderOutputBoundary successPresenter = new RenderOutputBoundary() {
             @Override
-            public void prepareSuccessView(RenderOutputData outputData) {
+            public void prepareRenderSuccessView(RenderOutputData outputData) {
                 // Check if an image was successfully generated
                 assertNotNull(outputData.getRenderedImage(), "Rendered image should not be null.");
             }
 
             @Override
-            public void prepareFailView(String errorMessage) {
+            public void prepareRenderFailView(String errorMessage) {
                 fail("Use case failure is unexpected.");
             }
 
@@ -44,12 +44,12 @@ public class RenderInteractorTest {
 
         RenderOutputBoundary successPresenter = new RenderOutputBoundary() {
             @Override
-            public void prepareSuccessView(RenderOutputData outputData) {
+            public void prepareRenderSuccessView(RenderOutputData outputData) {
                 fail("Success View is unexpected.");
             }
 
             @Override
-            public void prepareFailView(String errorMessage) {
+            public void prepareRenderFailView(String errorMessage) {
                 fail("Fail View is unexpected.");
             }
 
@@ -73,12 +73,12 @@ public class RenderInteractorTest {
 
         RenderOutputBoundary successPresenter = new RenderOutputBoundary() {
             @Override
-            public void prepareSuccessView(RenderOutputData outputData) {
+            public void prepareRenderSuccessView(RenderOutputData outputData) {
                 fail("Use case success is unexpected.");
             }
 
             @Override
-            public void prepareFailView(String errorMessage) {
+            public void prepareRenderFailView(String errorMessage) {
                 assertEquals("Description is longer than 5000 characters.", errorMessage);
             }
 
@@ -99,12 +99,12 @@ public class RenderInteractorTest {
 
         RenderOutputBoundary successPresenter = new RenderOutputBoundary() {
             @Override
-            public void prepareSuccessView(RenderOutputData outputData) {
+            public void prepareRenderSuccessView(RenderOutputData outputData) {
                 fail("Use case success is unexpected.");
             }
 
             @Override
-            public void prepareFailView(String errorMessage) {
+            public void prepareRenderFailView(String errorMessage) {
                 assertEquals("Description is empty.", errorMessage);
             }
 
