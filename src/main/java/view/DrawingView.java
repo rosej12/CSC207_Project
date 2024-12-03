@@ -1,11 +1,6 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -26,11 +21,15 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.List;
+import java.awt.Graphics2D;
 
 import entities.ColorPalette;
+import entities.Shape;
 import interfaceadapters.Drawing.DrawingController;
 import interfaceadapters.Drawing.DrawingState;
 import interfaceadapters.Drawing.DrawingViewModel;
+import interfaceadapters.Shape.ShapeViewModel;
 import interfaceadapters.ViewManagerModel;
 import usecases.ColorPaletteRepositoryInterface;
 
@@ -61,12 +60,16 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private JButton[] colorButtons;
     private final JPanel buttonsPanel;
 
+    private ShapeViewModel shapeViewModel;
+
     public DrawingView(DrawingViewModel drawingViewModel, ViewManagerModel viewManagerModel,
-                       ColorPaletteRepositoryInterface colorPaletteRepository) {
+                       ColorPaletteRepositoryInterface colorPaletteRepository, ShapeViewModel shapeViewModel) {
         this.drawingViewModel = drawingViewModel;
         this.viewManagerModel = viewManagerModel;
         this.drawingViewModel.addPropertyChangeListener(this);
         this.colorPaletteRepository = colorPaletteRepository;
+        this.shapeViewModel = shapeViewModel;
+        this.shapeViewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
 
@@ -87,6 +90,8 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         buttonsPanel.add(generateColorButton);
         JButton imageToColorButton = new JButton("Generate Color from Image");
         buttonsPanel.add(imageToColorButton);
+        JButton shapesButton = new JButton("Shapes");
+        buttonsPanel.add(shapesButton);
 
         // Set up action listeners for buttons
         saveButton.addActionListener(event -> saveDrawing());
@@ -94,6 +99,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         generateColorButton.addActionListener(event -> switchToGenerateRandomColorsView());
         imageToColorButton.addActionListener(event -> switchToImageToColorPaletteView());
         toRenderButton.addActionListener(evt -> switchToRenderView());
+        shapesButton.addActionListener(event -> switchToShapeView());
 
         // Initialize color palette buttons
         updateColorPalette();
@@ -252,6 +258,11 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
                 color.getRed(), color.getGreen(), color.getBlue());
     }
 
+    private void switchToShapeView() {
+        viewManagerModel.setState("Shape");
+        viewManagerModel.firePropertyChanged();
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final DrawingState state = drawingViewModel.getState();
@@ -267,6 +278,47 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
         if (state.getDrawing() == null) {
             drawingPanel.clear();
+        }
+
+        if ("shapes".equals(evt.getPropertyName())) {
+            drawingPanel.repaint(); // Repaint the canvas when the shapes list is updated
+        }
+    }
+
+    /**
+     * Draws a single shape on the drawing canvas.
+     *
+     * @param shape the shape to draw
+     */
+    private void drawShapeOnCanvas(Graphics2D g2d, Shape shape) {
+        g2d.setColor(shape.getColor());
+        g2d.setStroke(new BasicStroke(shape.getStrokeWidth()));
+
+        switch (shape.getType()) {
+            case LINE:
+                g2d.drawLine(shape.getX1(), shape.getY1(), shape.getX2(), shape.getY2());
+                break;
+            case RECTANGLE:
+                g2d.drawRect(shape.getX1(), shape.getY1(),
+                        shape.getX2() - shape.getX1(), shape.getY2() - shape.getY1());
+                break;
+            case SQUARE:
+                int side = Math.min(Math.abs(shape.getX2() - shape.getX1()),
+                        Math.abs(shape.getY2() - shape.getY1()));
+                g2d.drawRect(shape.getX1(), shape.getY1(), side, side);
+                break;
+            case CIRCLE:
+                int diameter = Math.min(Math.abs(shape.getX2() - shape.getX1()),
+                        Math.abs(shape.getY2() - shape.getY1()));
+                g2d.drawOval(shape.getX1(), shape.getY1(), diameter, diameter);
+                break;
+            case TRIANGLE:
+                int[] xPoints = {shape.getX1(), shape.getX2(), (shape.getX1() + shape.getX2()) / 2};
+                int[] yPoints = {shape.getY1(), shape.getY1(), shape.getY2()};
+                g2d.drawPolygon(xPoints, yPoints, 3);
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported shape type: " + shape.getType());
         }
     }
 
@@ -341,14 +393,24 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
+
             if (image == null) {
                 image = createImage(getSize().width, getSize().height);
                 g2 = (Graphics2D) image.getGraphics();
                 g2.setColor(Color.WHITE);
                 g2.fillRect(0, 0, getWidth(), getHeight());
-                g2.setColor(currentColor);
             }
+
             g.drawImage(image, 0, 0, null);
+
+            // Render all shapes
+            List<Shape> shapes = shapeViewModel.getShapes();
+            if (shapes != null) {
+                Graphics2D g2d = (Graphics2D) g;
+                for (Shape shape : shapes) {
+                    drawShapeOnCanvas(g2d, shape); // Render shapes
+                }
+            }
         }
 
         public void clear() {
