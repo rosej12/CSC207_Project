@@ -151,8 +151,7 @@ public class AppBuilder {
 //    }
 
     public AppBuilder addUndoRedoUseCase() {
-        final UndoRedoOutputBoundary undoRedoOutputBoundary = new UndoRedoPresenter(undoRedoViewModel,
-                drawingViewModel,viewManagerModel);
+        final UndoRedoOutputBoundary undoRedoOutputBoundary = new UndoRedoPresenter(undoRedoViewModel);
         final UndoRedoInputBoundary undoRedoInteractor = new UndoRedoInteractor(undoRedoOutputBoundary);
         final UndoRedoController undoRedoController = new UndoRedoController(undoRedoInteractor);
         drawingView.setUndoRedoController(undoRedoController);

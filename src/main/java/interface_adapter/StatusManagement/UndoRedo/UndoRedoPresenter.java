@@ -13,14 +13,8 @@ import java.awt.image.RenderedImage;
 
 public class UndoRedoPresenter implements UndoRedoOutputBoundary {
     private UndoRedoViewModel viewModel;
-    private final DrawingViewModel drawingViewModel;
-    private final ViewManagerModel viewManagerModel;
-
-    public UndoRedoPresenter(UndoRedoViewModel viewModel, DrawingViewModel drawingViewModel,
-                             ViewManagerModel viewManagerModel) {
-        this.viewModel = new UndoRedoViewModel();
-        this.drawingViewModel = new DrawingViewModel();
-        this.viewManagerModel = new ViewManagerModel();
+    public UndoRedoPresenter(UndoRedoViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     /**
@@ -33,12 +27,13 @@ public class UndoRedoPresenter implements UndoRedoOutputBoundary {
 
     @Override
     public void changeUndoState(Image image) {
-        System.out.println("changed");
+        System.out.println("changed_1");
 
         //RenderedImage renderedImage = image;
         viewModel.getState().setState(image);
+        System.out.println("changed state");
 //        viewModel.setState(viewModel.getState());
-        viewModel.firePropertyChanged("undo");
+        viewModel.firePropertyChanged("UndoRedo");
     }
 
     @Override

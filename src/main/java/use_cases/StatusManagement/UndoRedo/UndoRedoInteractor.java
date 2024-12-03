@@ -11,8 +11,8 @@ import java.util.Stack;
 public class UndoRedoInteractor implements UndoRedoInputBoundary {
     private UndoRedoOutputBoundary boundary;
 
-    private static final Stack<Image> undoStack = new Stack<>();
-    private static final Stack<Image> redoStack = new Stack<>();
+    private final Stack<Image> undoStack = new Stack<>();
+    private final Stack<Image> redoStack = new Stack<>();
     private Image currentImage = getBlankImage(100, 100);
 
     public UndoRedoInteractor(UndoRedoOutputBoundary boundary) {
@@ -21,15 +21,16 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
 
     @Override
     public void saveAction(Image image) {
-        displayImage(currentImage);
+        Image copy = getCopyImage(image);   // the previous image
+
         undoStack.push(currentImage);
-        System.out.println(undoStack.size());
-        currentImage = image;
+        currentImage = copy;
         redoStack.clear(); // Clear redo stack on new action
     }
 
     @Override
     public void undo() {
+        System.out.println("interactor");
         if (!undoStack.isEmpty()) {
             System.out.println("in undo interactor");
             redoStack.push(currentImage);
@@ -37,7 +38,10 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
 //            displayImage(currentImage);
             boundary.changeUndoState(currentImage);
         }
-        System.out.println("stack empty");
+        else {
+            System.out.println("stack empty");
+        }
+
 //        displayImage(currentImage);
 //        boundary.changeUndoState(currentImage);
     }
@@ -51,12 +55,18 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
         }
     }
 
-    public static Stack<Image> getRedoStack() {
+    public Stack<Image> getRedoStack() {
         return redoStack;
     }
 
-    public static Stack<Image> getUndoStack() {
+    public Stack<Image> getUndoStack() {
         return undoStack;
+    }
+
+    public Image getCopyImage(Image image) {
+        Image copy = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        copy.getGraphics().drawImage(image, 0, 0, null);
+        return copy;
     }
 
     public static void displayImage(Image image) {

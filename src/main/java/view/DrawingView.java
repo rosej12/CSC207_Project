@@ -14,6 +14,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -69,9 +70,9 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         this.drawingViewModel = drawingViewModel;
         this.viewManagerModel = viewManagerModel;
         this.undoRedoViewModel = undoRedoViewModel;
-        this.drawingViewModel.addPropertyChangeListener(this);
-        this.undoRedoViewModel.addPropertyChangeListener(this);
         this.colorPaletteRepository = colorPaletteRepository;
+        this.drawingViewModel.addPropertyChangeListener(this);
+        this.undoRedoViewModel.addPropertyChangeListener(evt -> undoRedoDisplay());
 
         setLayout(new BorderLayout());
 
@@ -163,6 +164,16 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         undoRedoController.undo();
     }
 
+    public void undoRedoDisplay(){
+        final UndoRedoState undoRedoState = undoRedoViewModel.getState();
+
+        System.out.println("gonna display now");
+        Image image = undoRedoState.getState();
+        drawingPanel.drawImageToScreen(image);
+        repaint();
+
+    }
+
     private void redoAction(){
         undoRedoController.redo();
     }
@@ -249,7 +260,6 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final DrawingState state = drawingViewModel.getState();
-        final UndoRedoState undoRedoState = undoRedoViewModel.getState();
 
         if ("colorPalette".equals(evt.getPropertyName())) {
             updateColorPalette();
@@ -262,12 +272,6 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
 
         if (state.getDrawing() == null) {
             drawingPanel.clear();
-        }
-
-        if ("undo".equals(evt.getPropertyName())) {
-            Image image = undoRedoState.getState();
-            drawingPanel.setImage(image);
-            repaint();
         }
     }
 
@@ -361,8 +365,26 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
             image = i;
         }
 
+        public void drawImageToScreen(Image i) {
+            g2.drawImage(i, 0, 0, null);
+        }
+
         public Image getImage() {
             return image;
+        }
+
+        public static void displayImage(Image image) {
+
+            // Create a JLabel to display the image
+            JLabel label = new JLabel(new ImageIcon(image));
+
+            // Create a JFrame to hold the label
+            JFrame frame = new JFrame("Image Display");
+            //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLayout(new BorderLayout());
+            frame.add(label, BorderLayout.CENTER);
+            frame.pack();
+            frame.setVisible(true);
         }
 
     }
