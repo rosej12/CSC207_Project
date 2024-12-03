@@ -1,7 +1,5 @@
 package interface_adapter.StatusManagement.AutoSave;
 
-import interface_adapter.StatusManagement.UndoRedo.UndoRedoState;
-
 import java.awt.image.RenderedImage;
 
 public class AutoSaveState {

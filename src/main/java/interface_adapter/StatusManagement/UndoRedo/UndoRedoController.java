@@ -4,6 +4,7 @@ import use_cases.StatusManagement.AutoSave.AutoSaveInputBoundary;
 import use_cases.StatusManagement.UndoRedo.UndoRedoInputBoundary;
 import use_cases.StatusManagement.UndoRedo.UndoRedoInteractor;
 
+import java.awt.*;
 import java.awt.image.RenderedImage;
 
 public class UndoRedoController {
@@ -17,7 +18,7 @@ public class UndoRedoController {
      * Handles the undo action by invoking the undo use case.
      */
     public void undo() {
-
+        System.out.println("in controller undo");
         interactor.undo();
     }
 
@@ -27,5 +28,9 @@ public class UndoRedoController {
     public void redo() {
 
         interactor.redo();
+    }
+
+    public void saveAction(Image image){
+        interactor.saveAction(image);
     }
 }

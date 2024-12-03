@@ -32,20 +32,20 @@ public class UndoRedoPresenter implements UndoRedoOutputBoundary {
 
 
     @Override
-    public RenderedImage getUndoAction() {
-        RenderedImage image = (RenderedImage) UndoRedoInteractor.getUndoStack().pop().getImage();
+    public void changeUndoState(Image image) {
+        System.out.println("changed");
+
+        //RenderedImage renderedImage = image;
         viewModel.getState().setState(image);
-        viewModel.setState(viewModel.getState());
-        viewModel.firePropertyChanged();
-        return image;
+//        viewModel.setState(viewModel.getState());
+        viewModel.firePropertyChanged("undo");
     }
 
     @Override
-    public RenderedImage getRedoAction() {
-        RenderedImage image = (RenderedImage) UndoRedoInteractor.getRedoStack().pop().getImage();
+    public void changeRedoState(Image image) {
+        //RenderedImage renderedImage = (RenderedImage) image;
         viewModel.getState().setState(image);
         viewModel.setState(viewModel.getState());
         viewModel.firePropertyChanged();
-        return image;
     }
 }

@@ -52,12 +52,11 @@ public class AppBuilder {
     private RenderViewModel renderViewModel;
     private RenderDataAccessInterface renderDAO;
 
-    private UndoRedoView undoRedoView;
-    private AutoSaveView autoSaveView;
-    private AutoSaveViewModel autoSaveViewModel;
+//    private UndoRedoView undoRedoView;
+//    private AutoSaveView autoSaveView;
+//    private AutoSaveViewModel autoSaveViewModel;
     private UndoRedoViewModel undoRedoViewModel;
     private AutoSaveDataAccessInterface autoSaveDAO;
-    private UndoRedoDataAccessInterface undoRedoDAO;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -74,15 +73,15 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addAutosaveDAO(AutoSaveDataAccessInterface autoSaveDataAccess) {
-        this.autoSaveDAO = autoSaveDataAccess;
-        return this;
-    }
+//    public AppBuilder addAutosaveDAO(AutoSaveDataAccessInterface autoSaveDataAccess) {
+//        this.autoSaveDAO = autoSaveDataAccess;
+//        return this;
+//    }
 
-    public AppBuilder addUndoRedoDAO(UndoRedoDataAccessInterface undoRedoDataAccess) {
-        this.undoRedoDAO = undoRedoDataAccess;
-        return this;
-    }
+//    public AppBuilder addUndoRedoDAO(UndoRedoDataAccessInterface undoRedoDataAccess) {
+//        this.undoRedoDAO = undoRedoDataAccess;
+//        return this;
+//    }
 
     /**
      * Adds the Drawing View to the application.
@@ -90,7 +89,8 @@ public class AppBuilder {
      */
     public AppBuilder addDrawingView() {
         drawingViewModel = new DrawingViewModel();
-        drawingView = new DrawingView(drawingViewModel, viewManagerModel, colorPaletteRepository);
+        undoRedoViewModel = new UndoRedoViewModel();
+        drawingView = new DrawingView(drawingViewModel, viewManagerModel, colorPaletteRepository, undoRedoViewModel);
         cardPanel.add(drawingView, drawingView.getViewName());
         return this;
     }
@@ -111,24 +111,7 @@ public class AppBuilder {
         renderView = new RenderView(renderViewModel);
         cardPanel.add(renderView, renderView.getViewName());
         return this;
-    }
 
-    /**
-     * Adds the AutoSave View to the application
-     * @return this builder
-     */
-    public AppBuilder addAutoSaveView() {
-        autoSaveViewModel = new AutoSaveViewModel();
-        autoSaveView = new AutoSaveView(autoSaveViewModel);
-        cardPanel.add(autoSaveView, autoSaveView.getViewName());
-        return this;
-    }
-
-    public AppBuilder addUndoRedoView(){
-        undoRedoViewModel = new UndoRedoViewModel();
-        undoRedoView = new UndoRedoView(undoRedoViewModel);
-        cardPanel.add(undoRedoView,undoRedoView.getViewName());
-        return this;
     }
 
     /**
@@ -157,25 +140,25 @@ public class AppBuilder {
         return this;
     }
 
-    /**
-     * Adds the AutoSave Use Case to the application.
-     * @return this builder
-     */
-    public AppBuilder addAutoSaveUseCase() {
-        final AutoSaveOutputBoundary autoSaveOutputBoundary = new AutoSavePresenter(autoSaveViewModel,
-                viewManagerModel, drawingViewModel);
-        final AutoSaveInputBoundary autoSaveInteractor = new AutoSaveInteractor(autoSaveDAO, autoSaveOutputBoundary);
-        final AutoSaveController autoSaveController = new AutoSaveController(autoSaveInteractor);
-        autoSaveView.setAutoSaveController(autoSaveController);
-        return this;
-    }
+//    /**
+//     * Adds the AutoSave Use Case to the application.
+//     * @return this builder
+//     */
+//    public AppBuilder addAutoSaveUseCase() {
+//        final AutoSaveOutputBoundary autoSaveOutputBoundary = new AutoSavePresenter(autoSaveViewModel,
+//                viewManagerModel, drawingViewModel);
+//        final AutoSaveInputBoundary autoSaveInteractor = new AutoSaveInteractor(autoSaveDAO, autoSaveOutputBoundary);
+//        final AutoSaveController autoSaveController = new AutoSaveController(autoSaveInteractor);
+//        autoSaveView.setAutoSaveController(autoSaveController);
+//        return this;
+//    }
 
     public AppBuilder addUndoRedoUseCase() {
         final UndoRedoOutputBoundary undoRedoOutputBoundary = new UndoRedoPresenter(undoRedoViewModel,
                 drawingViewModel,viewManagerModel);
-        final UndoRedoInputBoundary undoRedoInteractor = new UndoRedoInteractor();
+        final UndoRedoInputBoundary undoRedoInteractor = new UndoRedoInteractor(undoRedoOutputBoundary);
         final UndoRedoController undoRedoController = new UndoRedoController(undoRedoInteractor);
-        undoRedoView.setUndoRedoController(undoRedoController);
+        drawingView.setUndoRedoController(undoRedoController);
         return this;
     }
 
