@@ -52,9 +52,6 @@ public class AppBuilder {
     private RenderViewModel renderViewModel;
     private RenderDataAccessInterface renderDAO;
 
-//    private UndoRedoView undoRedoView;
-//    private AutoSaveView autoSaveView;
-//    private AutoSaveViewModel autoSaveViewModel;
     private UndoRedoViewModel undoRedoViewModel;
     private AutoSaveDataAccessInterface autoSaveDAO;
 

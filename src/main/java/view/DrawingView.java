@@ -327,6 +327,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
+                    System.out.println("mouseReleased");
                     //displayImage(image);
                     undoRedoController.saveAction(image);
 

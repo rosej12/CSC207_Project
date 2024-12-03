@@ -4,6 +4,7 @@ import view.DrawingView.DrawingPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.util.Stack;
 
@@ -12,6 +13,7 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
 
     private static final Stack<Image> undoStack = new Stack<>();
     private static final Stack<Image> redoStack = new Stack<>();
+    private Image currentImage = getBlankImage(100, 100);
 
     public UndoRedoInteractor(UndoRedoOutputBoundary boundary) {
         this.boundary = boundary;
@@ -19,7 +21,10 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
 
     @Override
     public void saveAction(Image image) {
-        undoStack.push(image);
+        displayImage(currentImage);
+        undoStack.push(currentImage);
+        System.out.println(undoStack.size());
+        currentImage = image;
         redoStack.clear(); // Clear redo stack on new action
     }
 
@@ -27,13 +32,14 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
     public void undo() {
         if (!undoStack.isEmpty()) {
             System.out.println("in undo interactor");
-
-            Image action = undoStack.pop();
-            displayImage(action);
-            redoStack.push(action);
-            boundary.changeUndoState(action);
+            redoStack.push(currentImage);
+            currentImage = undoStack.pop();
+//            displayImage(currentImage);
+            boundary.changeUndoState(currentImage);
         }
         System.out.println("stack empty");
+//        displayImage(currentImage);
+//        boundary.changeUndoState(currentImage);
     }
 
     @Override
@@ -65,5 +71,15 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
         frame.add(label, BorderLayout.CENTER);
         frame.pack();
         frame.setVisible(true);
+    }
+
+
+    private Image getBlankImage(int width, int height) {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = image.createGraphics();
+        g.setColor(Color.WHITE);    // the background color
+        g.fillRect(0, 0, image.getWidth(), image.getHeight());
+        g.dispose();
+        return image;
     }
 }
