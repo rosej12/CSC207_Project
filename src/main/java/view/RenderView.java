@@ -21,9 +21,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import interfaceadapters.Render.RenderController;
-import interfaceadapters.Render.RenderState;
-import interfaceadapters.Render.RenderViewModel;
+import interface_adapter.Render.RenderController;
+import interface_adapter.Render.RenderState;
+import interface_adapter.Render.RenderViewModel;
 
 public class RenderView extends JPanel implements ActionListener, PropertyChangeListener {
     private static final int BORDERTOP = 50;

@@ -3,8 +3,8 @@ package use_case.shape;
 import entities.Shape;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import usecases.Shape.ShapeInteractor;
-import usecases.Shape.ShapeOutputBoundary;
+import use_case.Shape.ShapeInteractor;
+import use_case.Shape.ShapeOutputBoundary;
 
 import static org.mockito.Mockito.*;
 

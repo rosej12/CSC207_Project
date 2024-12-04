@@ -17,9 +17,9 @@ import javax.swing.JPanel;
 
 import entities.Color;
 import entities.ColorPalette;
-import interfaceadapters.ImageToColorPalette.ImageToColorPaletteController;
-import interfaceadapters.ImageToColorPalette.ImageToColorPaletteViewModel;
-import interfaceadapters.ViewManagerModel;
+import interface_adapter.ImageToColorPalette.ImageToColorPaletteController;
+import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
+import interface_adapter.ViewManagerModel;
 
 public class ImageToColorPaletteView extends JPanel implements ActionListener, PropertyChangeListener {
     private static final int DIMENSIONALITY = 100;

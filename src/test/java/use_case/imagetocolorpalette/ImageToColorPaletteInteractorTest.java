@@ -5,8 +5,8 @@ import entities.ColorPalette;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import usecases.ColorPaletteRepositoryInterface;
-import usecases.ImageToColorPalette.*;
+import use_case.ColorPaletteRepositoryInterface;
+import use_case.ImageToColorPalette.*;
 
 import java.io.File;
 import java.io.IOException;

@@ -26,12 +26,12 @@ import java.awt.Graphics2D;
 
 import entities.ColorPalette;
 import entities.Shape;
-import interfaceadapters.Drawing.DrawingController;
-import interfaceadapters.Drawing.DrawingState;
-import interfaceadapters.Drawing.DrawingViewModel;
-import interfaceadapters.Shape.ShapeViewModel;
-import interfaceadapters.ViewManagerModel;
-import usecases.ColorPaletteRepositoryInterface;
+import interface_adapter.Drawing.DrawingController;
+import interface_adapter.Drawing.DrawingState;
+import interface_adapter.Drawing.DrawingViewModel;
+import interface_adapter.Shape.ShapeViewModel;
+import interface_adapter.ViewManagerModel;
+import use_case.ColorPaletteRepositoryInterface;
 
 public class DrawingView extends JPanel implements PropertyChangeListener {
 

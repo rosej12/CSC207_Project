@@ -16,9 +16,9 @@ import javax.swing.JPanel;
 
 import entities.Color;
 import entities.ColorPalette;
-import interfaceadapters.GenerateRandomColor.GenerateRandomColorController;
-import interfaceadapters.GenerateRandomColor.GenerateRandomColorPaletteViewModel;
-import interfaceadapters.ViewManagerModel;
+import interface_adapter.GenerateRandomColor.GenerateRandomColorController;
+import interface_adapter.GenerateRandomColor.GenerateRandomColorPaletteViewModel;
+import interface_adapter.ViewManagerModel;
 
 public class GenerateRandomColorPaletteView extends JPanel implements ActionListener, PropertyChangeListener {
     private static final int DIMENSIONALITY = 100;

@@ -1,11 +1,11 @@
 package interface_adapters.drawing;
 
-import interfaceadapters.Drawing.DrawingPresenter;
-import interfaceadapters.Render.RenderViewModel;
-import interfaceadapters.ViewManagerModel;
+import interface_adapter.Drawing.DrawingPresenter;
+import interface_adapter.Render.RenderViewModel;
+import interface_adapter.ViewManagerModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import interfaceadapters.Drawing.*;
+import interface_adapter.Drawing.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

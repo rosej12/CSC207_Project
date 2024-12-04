@@ -1,12 +1,9 @@
 package use_case.GenerateRandomColorPalette;
 
-import dataaccesses.InMemoryColorPaletteRepository;
+import data_access.InMemoryColorPaletteRepository;
 import entities.Color;
 import entities.ColorPalette;
 import org.junit.jupiter.api.Test;
-import usecases.GenerateRandomColorPalette.GenerateRandomColorPaletteInteractor;
-import usecases.GenerateRandomColorPalette.GenerateRandomColorPaletteOutputBoundary;
-import usecases.GenerateRandomColorPalette.GenerateRandomColorPaletteResponseModel;
 
 import java.util.ArrayList;
 import java.util.List;
