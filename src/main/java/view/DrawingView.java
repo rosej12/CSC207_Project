@@ -31,6 +31,7 @@ import interface_adapter.Drawing.DrawingState;
 import interface_adapter.Drawing.DrawingViewModel;
 import interface_adapter.Shape.ShapeViewModel;
 import interface_adapter.StatusManagement.UndoRedo.UndoRedoController;
+import interface_adapter.StatusManagement.UndoRedo.UndoRedoState;
 import interface_adapter.StatusManagement.UndoRedo.UndoRedoViewModel;
 import interface_adapter.ViewManagerModel;
 import use_case.ColorPaletteRepositoryInterface;
