@@ -53,6 +53,8 @@ Before installing, make sure you have the following tools installed on your syst
 
 - **Git**: To clone the repository, you’ll need Git installed. You can download Git from [here](https://git-scm.com/).
 
+- **Operating Systems:** This software has been tested and confirmed to work on Windows. We have not yet tested it on other operating systems (e.g., macOS, Linux), so compatibility with these systems is not guaranteed.
+
 ### Installation Steps
 
 1. **Open the project in IntelliJ IDEA**:
@@ -69,7 +71,6 @@ Before installing, make sure you have the following tools installed on your syst
 - **Maven errors:** If you encounter errors related to Maven dependencies, try refreshing the Maven project in IntelliJ IDEA:
   - Open the Maven tool window.
   - Click the Refresh button (the circular arrow).
-  - Alternatively, you can run `mvn clean install -U` in the terminal if necessary.
 - **IntelliJ IDEA not recognizing dependencies** 
   - If IntelliJ IDEA doesn't automatically import dependencies from the `pom.xml`, you can manually trigger the import by right-clicking on the `pom.xml` file and selecting **Maven > Reimport**.
 
