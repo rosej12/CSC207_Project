@@ -50,6 +50,12 @@ import view.ImageToColorPaletteView;
 import view.RenderView;
 import view.ShapeView;
 import view.ViewManager;
+import interface_adapter.StatusManagement.UndoRedo.UndoRedoController;
+import interface_adapter.StatusManagement.UndoRedo.UndoRedoPresenter;
+import interface_adapter.StatusManagement.UndoRedo.UndoRedoViewModel;
+import use_cases.StatusManagement.UndoRedo.UndoRedoInputBoundary;
+import use_cases.StatusManagement.UndoRedo.UndoRedoInteractor;
+import use_cases.StatusManagement.UndoRedo.UndoRedoOutputBoundary;
 
 public class AppBuilder {
     private static final int WINDOW_WIDTH = 1000;
@@ -75,6 +81,8 @@ public class AppBuilder {
     private RenderDataAccessInterface renderDao;
 
     private ShapeView shapeView;
+
+    private UndoRedoViewModel undoRedoViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -118,7 +126,8 @@ public class AppBuilder {
      */
     public AppBuilder addDrawingView() {
         drawingViewModel = new DrawingViewModel();
-        drawingView = new DrawingView(drawingViewModel, viewManagerModel, colorPaletteRepository, shapeViewModel);
+        undoRedoViewModel = new UndoRedoViewModel();
+        drawingView = new DrawingView(drawingViewModel, viewManagerModel, colorPaletteRepository, shapeViewModel, undoRedoViewModel);
         cardPanel.add(drawingView, drawingView.getViewName());
         return this;
     }
@@ -219,6 +228,14 @@ public class AppBuilder {
         final RenderInputBoundary renderInteractor = new RenderInteractor(renderDao, renderOutputBoundary);
         final RenderController renderController = new RenderController(renderInteractor);
         renderView.setRenderController(renderController);
+        return this;
+    }
+
+    public AppBuilder addUndoRedoUseCase() {
+        final UndoRedoOutputBoundary undoRedoOutputBoundary = new UndoRedoPresenter(undoRedoViewModel);
+        final UndoRedoInputBoundary undoRedoInteractor = new UndoRedoInteractor(undoRedoOutputBoundary);
+        final UndoRedoController undoRedoController = new UndoRedoController(undoRedoInteractor);
+        drawingView.setUndoRedoController(undoRedoController);
         return this;
     }
 

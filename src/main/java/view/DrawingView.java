@@ -30,6 +30,8 @@ import interface_adapter.Drawing.DrawingController;
 import interface_adapter.Drawing.DrawingState;
 import interface_adapter.Drawing.DrawingViewModel;
 import interface_adapter.Shape.ShapeViewModel;
+import interface_adapter.StatusManagement.UndoRedo.UndoRedoController;
+import interface_adapter.StatusManagement.UndoRedo.UndoRedoViewModel;
 import interface_adapter.ViewManagerModel;
 import use_case.ColorPaletteRepositoryInterface;
 
@@ -39,9 +41,12 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private DrawingController drawingController;
     private final ViewManagerModel viewManagerModel;
     private final ColorPaletteRepositoryInterface colorPaletteRepository;
+    private UndoRedoController undoRedoController;
+    private UndoRedoViewModel undoRedoViewModel;
 
     private final JRadioButton paintButton;
     private final JRadioButton eraseButton;
+
     private final int initialSize = 1;
     private final SpinnerNumberModel paintModel = new SpinnerNumberModel(initialSize, initialSize,
             initialSize + 29, 1);
@@ -66,13 +71,15 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
     private ShapeViewModel shapeViewModel;
 
     public DrawingView(DrawingViewModel drawingViewModel, ViewManagerModel viewManagerModel,
-                       ColorPaletteRepositoryInterface colorPaletteRepository, ShapeViewModel shapeViewModel) {
+                       ColorPaletteRepositoryInterface colorPaletteRepository, ShapeViewModel shapeViewModel, UndoRedoViewModel undoRedoViewModel) {
         this.drawingViewModel = drawingViewModel;
         this.viewManagerModel = viewManagerModel;
+        this.undoRedoViewModel = undoRedoViewModel;
         this.drawingViewModel.addPropertyChangeListener(this);
         this.colorPaletteRepository = colorPaletteRepository;
         this.shapeViewModel = shapeViewModel;
         this.shapeViewModel.addPropertyChangeListener(this);
+        this.undoRedoViewModel.addPropertyChangeListener(evt -> undoRedoDisplay());
 
         setLayout(new BorderLayout());
 
@@ -95,6 +102,10 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         buttonsPanel.add(imageToColorButton);
         JButton shapesButton = new JButton("Shapes");
         buttonsPanel.add(shapesButton);
+        JButton undoButton = new JButton("Undo");
+        buttonsPanel.add(undoButton);
+        JButton redoButton = new JButton("Redo");
+        buttonsPanel.add(redoButton);
 
         // Set up action listeners for buttons
         saveButton.addActionListener(event -> saveDrawing());
@@ -103,6 +114,8 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         imageToColorButton.addActionListener(event -> switchToImageToColorPaletteView());
         toRenderButton.addActionListener(evt -> switchToRenderView());
         shapesButton.addActionListener(event -> switchToShapeView());
+        undoButton.addActionListener(evt -> undoAction());
+        redoButton.addActionListener(evt -> redoAction());
 
         // Initialize color palette buttons
         updateColorPalette();
@@ -153,6 +166,22 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         this.add(drawingPanel, BorderLayout.CENTER);
         this.add(buttonsPanel, BorderLayout.SOUTH);
         this.add(toolsPanel, BorderLayout.NORTH);
+    }
+
+    private void undoAction() {
+        undoRedoController.undo();
+    }
+
+    public void undoRedoDisplay(){
+        final UndoRedoState undoRedoState = undoRedoViewModel.getState();
+
+        Image image = undoRedoState.getState();
+        drawingPanel.drawImageToScreen(image);
+        repaint();
+    }
+
+    private void redoAction(){
+        undoRedoController.redo();
     }
 
     // Method to switch to ImageToColorPaletteView
@@ -341,6 +370,10 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         drawingController.switchToRenderView(panel.getImage());
     }
 
+    public void setUndoRedoController(UndoRedoController undoRedoController) {
+        this.undoRedoController = undoRedoController;
+    }
+
     /**
      * Retrieves the current DrawingController instance associated with this view.
      *
@@ -392,6 +425,14 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
                     prevX = x;
                     prevY = y;
                 }
+
+            });
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    undoRedoController.saveAction(image);
+
+                }
             });
         }
 
@@ -404,6 +445,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
                 g2 = (Graphics2D) image.getGraphics();
                 g2.setColor(Color.WHITE);
                 g2.fillRect(0, 0, getWidth(), getHeight());
+                undoRedoController.saveAction(image);
             }
 
             g.drawImage(image, 0, 0, null);
@@ -424,7 +466,12 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setPaint(currentColor);
                 repaint();
+                undoRedoController.saveAction(image);
             }
+        }
+
+        public void drawImageToScreen(Image i) {
+            g2.drawImage(i, 0, 0, null);
         }
 
         public Image getImage() {

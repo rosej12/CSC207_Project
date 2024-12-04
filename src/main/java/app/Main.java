@@ -33,6 +33,7 @@ public class Main {
                 .addGenerateRandomColorPaletteUseCase()
                 .addRenderUseCase()
                 .addShapesUseCase()
+                .addUndoRedoUseCase()
                 .build()
                 .setVisible(true);
     }
