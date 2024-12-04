@@ -8,8 +8,8 @@ import java.util.Stack;
 public class UndoRedoInteractor implements UndoRedoInputBoundary {
     private UndoRedoOutputBoundary boundary;
 
-    private final Stack<Image> undoStack = new Stack<>();
-    private final Stack<Image> redoStack = new Stack<>();
+    private Stack<Image> undoStack = new Stack<>();
+    private Stack<Image> redoStack = new Stack<>();
     private Image currentImage = null;
 
     public UndoRedoInteractor(UndoRedoOutputBoundary boundary) {
@@ -42,6 +42,14 @@ public class UndoRedoInteractor implements UndoRedoInputBoundary {
             currentImage = redoStack.pop();
             boundary.changeUndoRedoState(currentImage);
         }
+    }
+
+    public void setRedoStack(Stack<Image> stack) {
+        redoStack = stack;
+    }
+
+    public void setUndoStack(Stack<Image> stack) {
+        undoStack = stack;
     }
 
     public Stack<Image> getRedoStack() {
