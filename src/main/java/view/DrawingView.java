@@ -150,28 +150,16 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         this.add(toolsPanel, BorderLayout.NORTH);
     }
 
-    public DrawingView(DrawingViewModel drawingViewModel, ViewManagerModel viewManagerModel, ColorPaletteRepositoryInterface colorPaletteRepository,
-                       UndoRedoController undoRedoController, UndoRedoViewModel undoRedoViewModel) {
-        this.drawingViewModel = drawingViewModel;
-        this.viewManagerModel = viewManagerModel;
-        this.colorPaletteRepository = colorPaletteRepository;
-        this.undoRedoController = undoRedoController;
-        this.undoRedoViewModel = undoRedoViewModel;
-    }
-
     private void undoAction() {
-        System.out.println("button pressed");
         undoRedoController.undo();
     }
 
     public void undoRedoDisplay(){
         final UndoRedoState undoRedoState = undoRedoViewModel.getState();
 
-        System.out.println("gonna display now");
         Image image = undoRedoState.getState();
         drawingPanel.drawImageToScreen(image);
         repaint();
-
     }
 
     private void redoAction(){
@@ -288,6 +276,8 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
         this.undoRedoController = undoRedoController;
     }
 
+
+
     public class DrawingPanel extends JPanel {
         private Image image;
         private Graphics2D g2;
@@ -331,8 +321,6 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    System.out.println("mouseReleased");
-                    //displayImage(image);
                     undoRedoController.saveAction(image);
 
                 }
@@ -348,6 +336,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
                 g2.setColor(Color.WHITE);
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setColor(currentColor);
+                undoRedoController.saveAction(image);
             }
             g.drawImage(image, 0, 0, null);
         }
@@ -358,6 +347,7 @@ public class DrawingView extends JPanel implements PropertyChangeListener {
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setPaint(currentColor);
                 repaint();
+                undoRedoController.saveAction(image);
             }
         }
 

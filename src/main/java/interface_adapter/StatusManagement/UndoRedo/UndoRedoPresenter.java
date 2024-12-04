@@ -26,21 +26,8 @@ public class UndoRedoPresenter implements UndoRedoOutputBoundary {
 
 
     @Override
-    public void changeUndoState(Image image) {
-        System.out.println("changed_1");
-
-        //RenderedImage renderedImage = image;
+    public void changeUndoRedoState(Image image) {
         viewModel.getState().setState(image);
-        System.out.println("changed state");
-//        viewModel.setState(viewModel.getState());
         viewModel.firePropertyChanged("UndoRedo");
-    }
-
-    @Override
-    public void changeRedoState(Image image) {
-        //RenderedImage renderedImage = (RenderedImage) image;
-        viewModel.getState().setState(image);
-        viewModel.setState(viewModel.getState());
-        viewModel.firePropertyChanged();
     }
 }

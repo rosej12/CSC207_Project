@@ -18,7 +18,6 @@ public class UndoRedoController {
      * Handles the undo action by invoking the undo use case.
      */
     public void undo() {
-        System.out.println("in controller undo");
         interactor.undo();
     }
 
