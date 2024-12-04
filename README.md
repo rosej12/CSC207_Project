@@ -99,7 +99,7 @@ This project is licensed under the **CC0 1.0 Universal (CC0 1.0) Public Domain D
 
 ## Feedback
 
-We welcome your feedback! Please share your thoughts, suggestions in [Discussions](https://github.com/rosej12/CSC207_Project/discussions) or report bugs in the [Issues](https://github.com/rosej12/CSC207_Project/issues) section of this repository.
+We welcome your feedback! Please share your thoughts and suggestions or report bugs in the [Discussions](https://github.com/rosej12/CSC207_Project/discussions) or [Issues](https://github.com/rosej12/CSC207_Project/issues) section of this repository.
 
 ### Feedback Guidelines
 - Valid feedback should describe the issue clearly, include screenshots if applicable, and suggest possible improvements.
