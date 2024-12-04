@@ -1,9 +1,9 @@
 package app;
 
-import dataaccesses.DrawingFileDataAccess;
-import dataaccesses.RenderDataAccessObject;
-import usecases.Drawing.DrawingDataAccessInterface;
-import usecases.Render.RenderDataAccessInterface;
+import data_access.DrawingFileDataAccess;
+import data_access.RenderDataAccessObject;
+import use_case.Drawing.DrawingDataAccessInterface;
+import use_case.Render.RenderDataAccessInterface;
 
 public class Main {
 
@@ -33,6 +33,7 @@ public class Main {
                 .addGenerateRandomColorPaletteUseCase()
                 .addRenderUseCase()
                 .addShapesUseCase()
+                .addUndoRedoUseCase()
                 .build()
                 .setVisible(true);
     }

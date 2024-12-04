@@ -1,9 +1,9 @@
 package view;
 
 import entities.Shape;
-import interfaceadapters.Shape.ShapeController;
-import interfaceadapters.Shape.ShapeViewModel;
-import interfaceadapters.ViewManagerModel;
+import interface_adapter.Shape.ShapeController;
+import interface_adapter.Shape.ShapeViewModel;
+import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 import java.awt.*;

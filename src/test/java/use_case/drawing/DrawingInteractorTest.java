@@ -1,8 +1,8 @@
 package use_case.drawing;
 
-import usecases.Drawing.DrawingDataAccessInterface;
-import usecases.Drawing.DrawingInteractor;
-import usecases.Drawing.DrawingOutputBoundary;
+import use_case.Drawing.DrawingDataAccessInterface;
+import use_case.Drawing.DrawingInteractor;
+import use_case.Drawing.DrawingOutputBoundary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
