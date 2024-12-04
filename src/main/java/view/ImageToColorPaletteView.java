@@ -1,43 +1,49 @@
 package view;
 
-import entities.ColorPalette;
-import entities.Color;
-import interface_adapter.Drawing.DrawingController;
-import interface_adapter.ImageToColorPalette.ImageToColorPaletteController;
-import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
-import interface_adapter.ViewManagerModel;
-
-import javax.swing.*;
-import javax.swing.text.View;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import entities.Color;
+import entities.ColorPalette;
+import interface_adapter.ImageToColorPalette.ImageToColorPaletteController;
+import interface_adapter.ImageToColorPalette.ImageToColorPaletteViewModel;
+import interface_adapter.ViewManagerModel;
+
 public class ImageToColorPaletteView extends JPanel implements ActionListener, PropertyChangeListener {
-    private final String viewName = "ImageToColorPalette";
+    private static final int DIMENSIONALITY = 100;
     private final ImageToColorPaletteViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
-    private final JButton backButton = new JButton("Back");
-    private final JButton uploadButton = new JButton("Upload Image");
     private ImageToColorPaletteController imageToColorPaletteController;
+
+    private JPanel colorPanel;
 
     public ImageToColorPaletteView(ImageToColorPaletteViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         this.viewManagerModel = viewManagerModel;
         this.viewModel.addPropertyChangeListener(this);
-        this.viewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout());
 
-        // Panel for buttons
+        // Initialize and add the buttons panel
         JPanel buttonsPanel = new JPanel();
+        JButton uploadButton = new JButton("Upload Image");
+        JButton backButton = new JButton("Back");
         buttonsPanel.add(uploadButton);
         buttonsPanel.add(backButton);
 
-        uploadButton.addActionListener(e -> {
+        uploadButton.addActionListener(event -> {
             JFileChooser fileChooser = new JFileChooser();
             int option = fileChooser.showOpenDialog(ImageToColorPaletteView.this);
             if (option == JFileChooser.APPROVE_OPTION) {
@@ -46,7 +52,7 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
             }
         });
 
-        backButton.addActionListener(e -> switchToDrawingView());
+        backButton.addActionListener(event -> switchToDrawingView());
 
         add(buttonsPanel, BorderLayout.NORTH);
     }
@@ -60,7 +66,8 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
     public void propertyChange(PropertyChangeEvent evt) {
         if ("colorPalette".equals(evt.getPropertyName())) {
             displayColors(viewModel.getState().getColorPalette());
-        } else if ("error".equals(evt.getPropertyName())) {
+        }
+        else if ("error".equals(evt.getPropertyName())) {
             displayError(viewModel.getState().getErrorMessage());
         }
     }
@@ -70,15 +77,23 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
     }
 
     private void displayColors(ColorPalette colorPalette) {
-        JPanel colorPanel = new JPanel();
+        // Remove the existing color panel if it exists
+        if (colorPanel != null) {
+            remove(colorPanel);
+        }
+
+        // Create a new color panel
+        colorPanel = new JPanel();
         colorPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
         for (Color color : colorPalette.getColors()) {
             JLabel label = new JLabel();
             label.setOpaque(true);
             label.setBackground(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
-            label.setPreferredSize(new Dimension(100, 100));
+            label.setPreferredSize(new Dimension(DIMENSIONALITY, DIMENSIONALITY));
             colorPanel.add(label);
         }
+
         add(colorPanel, BorderLayout.CENTER);
         revalidate();
         repaint();
@@ -86,12 +101,25 @@ public class ImageToColorPaletteView extends JPanel implements ActionListener, P
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        // Handle any additional actions if necessary
     }
 
-    public String getViewName() {return viewName;}
+    /**
+     * Retrieves the name of the view.
+     *
+     * @return The name of the view as a {@code String}.
+     */
+    public String getViewName() {
+        return "ImageToColorPalette";
+    }
 
+    /**
+     * Sets the controller responsible for handling image-to-color-palette functionality.
+     *
+     * @param controller The {@link ImageToColorPaletteController} to be set.
+     */
     public void setImageToColorPaletteController(ImageToColorPaletteController controller) {
         this.imageToColorPaletteController = controller;
     }
 }
+

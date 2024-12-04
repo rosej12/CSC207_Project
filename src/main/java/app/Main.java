@@ -1,14 +1,9 @@
 package app;
 
-import javax.swing.*;
-
-import data_access.RenderDataAccessObject;
 import data_access.DrawingFileDataAccess;
 import data_access.RenderDataAccessObject;
-import use_cases.Drawing.DrawingDataAccessInterface;
-import use_cases.Render.RenderDataAccessInterface;
-import use_cases.Render.RenderDataAccessInterface;
-import use_cases.StatusManagement.AutoSave.AutoSaveDataAccessInterface;
+import use_case.Drawing.DrawingDataAccessInterface;
+import use_case.Render.RenderDataAccessInterface;
 
 public class Main {
 
@@ -26,17 +21,20 @@ public class Main {
 
         // Build the application by adding components and setting up use cases
         appBuilder
-                .addDAO(drawingDataAccess)          // Injects the data access object
-                .addRenderDAO(renderDataAccess)     // Injects the data access object
-                .addDrawingView()                   // Adds the Drawing View
-                .addImageToColorPaletteView()       // Adds the ImageToColorPalette View
-                .addRenderView()                    // Adds the Render View
-                .addDrawingUseCase()                // Sets up the Drawing Use Case
-                .addImageToColorPaletteUseCase()    // Sets up the ImageToColorPalette Use Case
-                .addRenderUseCase()                 // Sets up the Render Use Case
-//                .addAutoSaveUseCase()
+                .addDao(drawingDataAccess)
+                .addRenderDao(renderDataAccess)
+                .addDrawingView()
+                .addImageToColorPaletteView()
+                .addGenerateRandomColorPaletteView()
+                .addRenderView()
+                .addShapeView()
+                .addDrawingUseCase()
+                .addImageToColorPaletteUseCase()
+                .addGenerateRandomColorPaletteUseCase()
+                .addRenderUseCase()
+                .addShapesUseCase()
                 .addUndoRedoUseCase()
-                .build()                            // Builds the application
-                .setVisible(true);                  // Makes the application window visible
+                .build()
+                .setVisible(true);
     }
 }

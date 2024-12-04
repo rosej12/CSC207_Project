@@ -1,20 +1,26 @@
 package data_access;
 
-import okhttp3.*;
-import use_cases.Render.RenderDataAccessInterface;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import use_case.Render.RenderDataAccessInterface;
+
 public class RenderDataAccessObject implements RenderDataAccessInterface {
-
-
-//     TODO: either delete the saving or make it a feature/use case
+    private static final int MAXWIDTH = 1024;
+    private static final int MAXHEIGHT = 1024;
     private final String sketchFileName = "sketch.png";
     private final String outputPath = "src/main/resources/render.jpg";
     private final String sketchFilePath = "src/main/resources/" + sketchFileName;
@@ -40,7 +46,7 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
     }
 
     /**
-     * Returns an image that fits the following conditions:
+     * Returns an image that fits the following conditions.
      *  - has a black background with white strokes
      *  - is square (height equals width)
      *  - height and width are <= 1024 px
@@ -55,7 +61,7 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
         bufferedImage = cropImageToSquare(bufferedImage);
 
         // Resize so it is <= 1024 x 1024
-        bufferedImage = shrinkImage(bufferedImage, 1024, 1024);
+        bufferedImage = shrinkImage(bufferedImage, MAXWIDTH, MAXHEIGHT);
 
         // Invert colors
         bufferedImage = invertColors(bufferedImage);
@@ -80,7 +86,8 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
                 // Convert
                 if (rgb == Color.WHITE.getRGB()) {
                     invertedImage.setRGB(x, y, Color.BLACK.getRGB());
-                } else {
+                }
+                else {
                     invertedImage.setRGB(x, y, Color.WHITE.getRGB());
                 }
             }
@@ -123,7 +130,8 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
     }
 
     private byte[] getRenderedImageAsBytes(String prompt) {
-        String apiKey = "c13a4d6a84727d7ecf8fbc4b0da96603e514136b2e87a3c690dd6c8054c29bca2ab68ff22261c4aa46f9ef00300b064b";
+        String apiKey =
+                "c13a4d6a84727d7ecf8fbc4b0da96603e514136b2e87a3c690dd6c8054c29bca2ab68ff22261c4aa46f9ef00300b064b";
         String url = "https://clipdrop-api.co/sketch-to-image/v1/sketch-to-image";
 
         File sketchFile = new File(sketchFilePath);
@@ -136,7 +144,6 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
 
         OkHttpClient client = new OkHttpClient().newBuilder().build();
 
-        // TODO: currently assuming png
         MultipartBody.Builder bodyBuilder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart(
@@ -161,11 +168,13 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
 
                 return response.body().bytes();
 
-            } else {
+            }
+            else {
                 System.out.println("Error: " + response.code());
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        }
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
         return null;
     }
@@ -175,8 +184,9 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
         try {
             BufferedImage bufferedImage = ImageIO.read(bais);
             return bufferedImage;
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
         }
         return null;
     }
@@ -184,15 +194,17 @@ public class RenderDataAccessObject implements RenderDataAccessInterface {
     private void saveImage(Image image, String filePath) {
 
         // convert to BufferedImage
-        BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null),
+                BufferedImage.TYPE_INT_RGB);
         bufferedImage.getGraphics().drawImage(image, 0, 0, null);
 
         // save
         File outputFile = new File(filePath);
         try {
-            ImageIO.write(bufferedImage, "jpg", outputFile); // TODO: assuming jpg
-        } catch (IOException e) {
-            e.printStackTrace();
+            ImageIO.write(bufferedImage, "jpg", outputFile);
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 

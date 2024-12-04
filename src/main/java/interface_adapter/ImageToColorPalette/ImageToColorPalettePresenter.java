@@ -1,7 +1,7 @@
 package interface_adapter.ImageToColorPalette;
 
-import use_cases.ImageToColorPalette.ImageToColorPaletteOutputBoundary;
-import use_cases.ImageToColorPalette.ImageToColorPaletteResponseModel;
+import use_case.ImageToColorPalette.ImageToColorPaletteOutputBoundary;
+import use_case.ImageToColorPalette.ImageToColorPaletteResponseModel;
 
 public class ImageToColorPalettePresenter implements ImageToColorPaletteOutputBoundary {
     private final ImageToColorPaletteViewModel viewModel;

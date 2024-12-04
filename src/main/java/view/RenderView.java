@@ -1,24 +1,36 @@
 package view;
 
-import interface_adapter.Render.RenderController;
-import interface_adapter.Render.RenderState;
-import interface_adapter.Render.RenderViewModel;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-/**
- * The View for the Render Use Case
- */
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import interface_adapter.Render.RenderController;
+import interface_adapter.Render.RenderState;
+import interface_adapter.Render.RenderViewModel;
+
 public class RenderView extends JPanel implements ActionListener, PropertyChangeListener {
+    private static final int BORDERTOP = 50;
+    private static final int BORDERBOTTOM = 50;
+    private static final int EMPTYBORDERBOTTOM = 150;
+    private static final int TEXTROWS = 5;
+    private static final int TEXTCOLS = 40;
     private final String viewName = "render";
     private final RenderViewModel renderViewModel;
     private RenderController renderController;
@@ -42,13 +54,11 @@ public class RenderView extends JPanel implements ActionListener, PropertyChange
 
         // Panel for actions (description, text field, render button)
         final JPanel actionPanel = new JPanel();
-        actionPanel.setBorder(new EmptyBorder(50, 0, 50, 0));
+        actionPanel.setBorder(new EmptyBorder(BORDERTOP, 0, BORDERBOTTOM, 0));
 
         // Description label and input field
         final JLabel descriptionLabel = new JLabel(RenderViewModel.DESCRIPTION_LABEL);
-        descriptionTextInput = new JTextArea(5, 40);
-
-        // TODO: add a limit to the text field
+        descriptionTextInput = new JTextArea(TEXTROWS, TEXTCOLS);
 
         // Update state based on text input
         descriptionTextInput.getDocument().addDocumentListener(new DocumentListener() {
@@ -74,18 +84,15 @@ public class RenderView extends JPanel implements ActionListener, PropertyChange
             }
         });
 
-        // Render button
         renderButton = new JButton(RenderViewModel.RENDER_BUTTON_LABEL);
-        renderButton.addActionListener(e -> {
-            if (e.getSource().equals(renderButton)) {
-                // TODO?
+        renderButton.addActionListener(event -> {
+            if (event.getSource().equals(renderButton)) {
                 final RenderState renderState = renderViewModel.getState();
                 renderController.execute(renderState.getSketchDescription(), renderState.getSketch());
                 System.out.println("rendering");
             }
         });
 
-        // Add components to action panel
         actionPanel.add(descriptionLabel);
         actionPanel.add(descriptionTextInput);
         actionPanel.add(renderButton);
@@ -109,7 +116,7 @@ public class RenderView extends JPanel implements ActionListener, PropertyChange
 
         // Error label
         errorLabel = new JLabel();
-        errorLabel.setBorder(new EmptyBorder(50, 0, 150, 0));
+        errorLabel.setBorder(new EmptyBorder(BORDERTOP, 0, EMPTYBORDERBOTTOM, 0));
         errorLabel.setForeground(Color.RED);
 
         // Button to drawing
@@ -151,10 +158,20 @@ public class RenderView extends JPanel implements ActionListener, PropertyChange
         return getBlankImageIcon(iconSize, iconSize);
     }
 
+    /**
+     * Retrieves the name of the current view.
+     *
+     * @return A {@link String} representing the name of the view.
+     */
     public String getViewName() {
         return viewName;
     }
 
+    /**
+     * Sets the {@link RenderController} for this view.
+     *
+     * @param renderController The {@link RenderController} instance to be associated with this view.
+     */
     public void setRenderController(RenderController renderController) {
         this.renderController = renderController;
     }

@@ -1,13 +1,10 @@
 package interface_adapter.Render;
 
-import use_cases.Render.RenderInputBoundary;
-import use_cases.Render.RenderInputData;
+import java.awt.Image;
 
-import java.awt.*;
+import use_case.Render.RenderInputBoundary;
+import use_case.Render.RenderInputData;
 
-/**
- * Controller for the Render Use Case
- */
 public class RenderController {
     private final RenderInputBoundary renderInteractor;
 
@@ -16,7 +13,10 @@ public class RenderController {
     }
 
     /**
-     * Executes the Render Use Case.
+     * Executes the render operation using the provided description and sketch.
+     *
+     * @param description A textual description of the image to render.
+     * @param sketch      An {@link Image} object representing the sketch to render.
      */
     public void execute(String description, Image sketch) {
         final RenderInputData renderInputData = new RenderInputData(description, sketch);
@@ -24,7 +24,7 @@ public class RenderController {
     }
 
     /**
-     * Executes the "switch to drawing view" use case
+     * Switches the application view to the drawing view.
      */
     public void switchToDrawingView() {
         renderInteractor.switchToDrawingView();

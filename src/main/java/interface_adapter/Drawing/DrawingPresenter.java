@@ -1,12 +1,11 @@
 package interface_adapter.Drawing;
 
+import java.awt.Image;
+import java.awt.image.RenderedImage;
+
 import interface_adapter.Render.RenderViewModel;
 import interface_adapter.ViewManagerModel;
-import use_cases.Drawing.DrawingOutputBoundary;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.RenderedImage;
+import use_case.Drawing.DrawingOutputBoundary;
 
 public class DrawingPresenter implements DrawingOutputBoundary {
 
@@ -14,7 +13,8 @@ public class DrawingPresenter implements DrawingOutputBoundary {
     private final RenderViewModel renderViewModel;
     private final ViewManagerModel viewManagerModel;
 
-    public DrawingPresenter(ViewManagerModel viewManagerModel, DrawingViewModel drawingViewModel, RenderViewModel renderViewModel) {
+    public DrawingPresenter(ViewManagerModel viewManagerModel, DrawingViewModel drawingViewModel,
+                            RenderViewModel renderViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.drawingViewModel = drawingViewModel;
         this.renderViewModel = renderViewModel;

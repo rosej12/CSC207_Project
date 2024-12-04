@@ -1,19 +1,19 @@
 package data_access;
 
-import entities.ColorPalette;
-import use_cases.ImageToColorPalette.ColorPaletteRepositoryInterface;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+
+import entities.ColorPalette;
+import use_case.ColorPaletteRepositoryInterface;
 
 public class InMemoryColorPaletteRepository implements ColorPaletteRepositoryInterface {
     private ColorPalette colorPalette;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     @Override
-    public void saveColorPalette(ColorPalette colorPalette) {
+    public void saveColorPalette(ColorPalette colorPalette1) {
         ColorPalette oldPalette = this.colorPalette;
-        this.colorPalette = colorPalette;
+        this.colorPalette = colorPalette1;
         support.firePropertyChange("colorPalette", oldPalette, this.colorPalette);
     }
 
